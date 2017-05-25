@@ -99,14 +99,14 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             return fulcrumException;
         }
 
-        public static HttpResponseMessage ExceptionToHttpResponseMessage(Exception e)
+        public static HttpResponseMessage ExceptionToHttpResponseMessage(Exception e, bool mustMatchCoreExceptions = false)
         {
-            HttpResponseMessage response;
+            HttpResponseMessage response = null;
             var fulcrumException = e as FulcrumException;
             if (fulcrumException == null)
             {
                 var message = $"The exception {e.GetType().FullName} was not recognized as a Fulcrum Exception. Message: {e.Message}";
-                fulcrumException = new AssertionFailedException(message);
+                fulcrumException = new AssertionFailedException(message, e);
             }
 
             var error = new Error();
@@ -150,7 +150,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
                     Content = stringContent
                 };
             }
-            else
+            else if (mustMatchCoreExceptions)
             {
                 var message = $"Unexpected exception: {fulcrumException.GetType().FullName}: {fulcrumException.Message}";
                 response = new HttpResponseMessage(HttpStatusCode.InternalServerError)

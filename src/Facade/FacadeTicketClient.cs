@@ -29,7 +29,7 @@ namespace Facade
             }
             catch (System.Exception e)
             {
-                response = ExceptionHandler.ExceptionToHttpResponseMessage(e);
+                response = ExceptionHandler.ExceptionToHttpResponseMessage(e, true);
             }
             return response;
         }

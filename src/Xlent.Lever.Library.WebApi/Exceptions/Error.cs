@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xlent.Lever.Library.Core.Exceptions;
+using Xlent.Lever.Library.Core.Exceptions.Service;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
 {
@@ -109,6 +110,11 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             TypeId = error.TypeId;
             CorrelationId = error.CorrelationId;
             FriendlyMessageId = error.FriendlyMessageId;
+
+            var innerError = (error as Exception)?.InnerException as IError;
+            if (innerError == null) return;
+            InnerError = new Error();
+            InnerError.CopyFrom(innerError);
         }
 
         public string ToJsonString(Formatting formatting)
