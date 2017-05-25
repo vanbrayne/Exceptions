@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using Xlent.Lever.Library.Core.Exceptions.Service;
 using Xlent.Lever.Library.Core.Exceptions.Service.Client;
 using Xlent.Lever.Library.Core.Exceptions.Service.Server;
-using Xlent.Lever.Library.WebApi;
+using Xlent.Lever.Library.WebApi.Exceptions;
 
 namespace Facade
 {
@@ -72,7 +72,8 @@ namespace Facade
                     fulcrumException = new AssertionFailedException($"Unexpected switch value: {expectedFacadeResult}");
                     break;
             }
-            fulcrumException.InstanceId = "75573277-52e0-4ece-b9f2-79d7bc7d0658";
+            // This is to be able to test that the properties are copied all the way back to the test case.
+            fulcrumException.Code = fulcrumException.InstanceId;
             throw fulcrumException;
         }
     }

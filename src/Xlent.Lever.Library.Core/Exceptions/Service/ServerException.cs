@@ -5,8 +5,9 @@
     /// </summary>
     public abstract class ServerException : FulcrumException
     {
-        protected ServerException() { }
-        protected ServerException(string message) : base(message) { }
+        protected ServerException() : this(null, null) { }
+        protected ServerException(string message) : this(message, null) { }
+        protected ServerException(IError error) : base(error) { }
         protected ServerException(string message, System.Exception innerException) : base(message, innerException) { }
     }
 }

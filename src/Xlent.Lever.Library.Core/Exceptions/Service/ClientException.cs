@@ -5,8 +5,9 @@
     /// </summary>
     public abstract class ClientException : FulcrumException
     {
-        protected ClientException() { }
-        protected ClientException(string message) : base(message) { }
+        protected ClientException() : this(null, null) { }
+        protected ClientException(string message) : this(message, null) { }
+        protected ClientException(IError error) : base(error) { }
         protected ClientException(string message, System.Exception innerException) : base(message, innerException) { }
     }
 }

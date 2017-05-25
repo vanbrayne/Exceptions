@@ -14,10 +14,26 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Client
     public class ConflictException : ClientException
     {
         public const string ExceptionTypeId = "8ca23bea-e1f9-4c35-a181-e16738122a75";
-        public ConflictException() : base() { }
-        public ConflictException(string message) : base(message) { }
-        public ConflictException(string message, Exception innerException) : base(message, innerException) { }
+        public ConflictException() : this(null, null) { }
+        public ConflictException(string message) : this(message, null)
+        {
+            SetProperties();
+        }
+        public ConflictException(IError error) : base(error)
+        {
+            SetProperties();
+        }
+        public ConflictException(string message, Exception innerException) : base(message, innerException)
+        {
+            SetProperties();
+        }
+
+        public override bool IsRetryMeaningful => false;
         public override string TypeId => ExceptionTypeId;
-        public override bool IsIdempotent => true;
+
+        private void SetProperties()
+        {
+            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+        }
     }
 }

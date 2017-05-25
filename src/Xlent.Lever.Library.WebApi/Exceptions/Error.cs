@@ -1,20 +1,22 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Xlent.Lever.Library.Core.Exceptions;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Service
+namespace Xlent.Lever.Library.WebApi.Exceptions
 {
     /// <summary>
-    /// The base class for all Fulcrum exceptions
+    /// Information that will be returned when a REST service returns a non successful HTTP status code
     /// </summary>
-    public abstract class FulcrumException : Exception, IError
+    /// <remarks>
+    /// Inspired by the follwing articles
+    /// http://blog.restcase.com/rest-api-error-codes-101/
+    /// https://stormpath.com/blog/spring-mvc-rest-exception-handling-best-practices-part-1
+    /// </remarks>
+    public class Error : IError
     {
         /// <summary>
-        /// The current servent name. Can be set by calling <see cref="Initialize"/>.
-        /// Will automaticall be copied to the the field <see cref="ServerTechnicalName"/> for every new error.
-        /// </summary>
-        private static string _serverTechnicalName;
-
-        /// <summary>
-        /// Mandatory technical information that a developer might find useful.
+        /// Mandatory technical information that a developer calling your REST API might find useful.
         /// This is where you might include exception messages, stack traces, or anything else that you
         /// think will help a developer.
         /// </summary>
@@ -22,11 +24,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// This message is not expected to contain any of the codes or identifiers that are already contained
         /// in this error type, sucha as the error <see cref="Code"/> or the <see cref="InstanceId"/>.
         /// </remarks>
-        /// <remarks>
-        /// If this property has not been set, the recommendation is to treat the <see cref="System.Exception.Message"/>
-        /// property as the technical message.
-        /// </remarks>
-        public string TechnicalMessage{ get; set; }
+        public string TechnicalMessage { get; set; }
 
         /// <summary>
         /// An optional human readable error message that can potentially be shown directly to an application
@@ -45,7 +43,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// <summary>
         /// Mandatory indication for if it would be meaningful to try sending the request again.
         /// </summary>
-        public virtual bool IsRetryMeaningful { get; private set; }
+        public bool IsRetryMeaningful { get; set; }
 
         /// <summary>
         /// If <see cref="IsRetryMeaningful"/> is true, then this optional property can give a recommended
@@ -66,7 +64,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// A mandatory unique identifier for this particular instance of the error. Ideally, the same identifier
         /// should not be used ever again. The recommendation is to use a newly created GUID.
         /// </summary>
-        public string InstanceId { get; private set; }
+        public string InstanceId { get; set; }
 
         /// <summary>
         /// An optional error code for this specific part of the code that reported the error. Will typically
@@ -78,11 +76,11 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// Errors are grouped into different types, such as "BusinessRule", "NotFound", "Unavailable".
         /// TypeId is a mandatory unique id for the type of error. The recommendation is to use a constant GUID.
         /// </summary>
-        public virtual string TypeId { get; private set; }
+        public string TypeId { get; set; }
 
         /// <summary>
         /// All calls that were involved in the chain that led to this error (successful calls or not) will
-        /// all be marked in the logs with this optional CorrelationId. It is valuable if someone wants to track down
+        /// all be marked in the logs with this mandatory CorrelationId. It is valuable if someone wants to track down
         /// exactly what happened.
         /// </summary>
         public string CorrelationId { get; set; }
@@ -93,36 +91,10 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// </summary>
         public string FriendlyMessageId { get; set; }
 
-
-
-        protected FulcrumException() : this(null, null) { }
-        protected FulcrumException(string message) : this(message,null) { }
-
-        protected FulcrumException(IError error)
-        {
-            CopyFrom(error);
-        }
-        protected FulcrumException(string message, Exception innerException) : base(message, innerException)
-        {
-            TechnicalMessage = message;
-            var error = innerException as IError;
-            if (error == null)
-            {
-                InstanceId = Guid.NewGuid().ToString();
-                return;
-            }
-            FriendlyMessage = error.FriendlyMessage;
-            MoreInfoUrl = error.MoreInfoUrl;
-            RecommendedWaitTimeInSeconds = error.RecommendedWaitTimeInSeconds;
-            InstanceId = error.InstanceId;
-            CorrelationId = error.CorrelationId;
-            FriendlyMessageId = error.FriendlyMessageId;
-        }
-
-        public virtual FulcrumException FromServerToClient(string serverTechnicalName)
-        {
-            return this;
-        }
+        /// <summary>
+        /// An optional error that was the cause of this error.
+        /// </summary>
+        public Error InnerError { get; set; }
 
         public void CopyFrom(IError error)
         {
@@ -139,12 +111,23 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
             FriendlyMessageId = error.FriendlyMessageId;
         }
 
-        public static void Initialize(string serverTechnicalName)
+        public string ToJsonString(Formatting formatting)
         {
-            if(serverTechnicalName == null) throw new ArgumentNullException(nameof(serverTechnicalName));
-            serverTechnicalName = serverTechnicalName.ToLower();
-            if (_serverTechnicalName != null && _serverTechnicalName != serverTechnicalName) throw new ApplicationException("Once the server name has been set, it can't be changed.");
-            _serverTechnicalName = serverTechnicalName;
+            return JObject.FromObject(this).ToString(formatting);
+        }
+
+        public static IError Parse(string s)
+        {
+            if (s == null) return null;
+            try
+            {
+                var json = JObject.Parse(s);
+                return json.ToObject<Error>();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

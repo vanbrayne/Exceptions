@@ -9,7 +9,8 @@ using Bll.Models;
 using CompositionRoot;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.WebApi;
+using Service.WebApi.Contract;
+using Xlent.Lever.Library.WebApi.Exceptions;
 
 namespace Service.WebApi
 {

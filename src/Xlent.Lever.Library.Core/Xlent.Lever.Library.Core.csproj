@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\Assert.cs" />
-    <Compile Include="Exceptions\ExceptionHandler.cs" />
+    <Compile Include="Exceptions\IError.cs" />
     <Compile Include="Exceptions\Service\ClientException.cs" />
     <Compile Include="Exceptions\Service\Client\BusinessRuleException.cs" />
     <Compile Include="Exceptions\Service\Client\ConflictException.cs" />
@@ -52,6 +52,7 @@
     <Compile Include="Exceptions\Service\ServerException.cs" />
     <Compile Include="Exceptions\Service\Server\AssertionFailedException.cs" />
     <Compile Include="Exceptions\Service\Server\NotImplementedException.cs" />
+    <Compile Include="Exceptions\Service\Server\TryAgainException.cs" />
     <Compile Include="Exceptions\Service\Server\UnavailableException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

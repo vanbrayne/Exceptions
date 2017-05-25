@@ -3,7 +3,7 @@ using Bll.Interfaces;
 using Bll.Models;
 using Facade;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.WebApi;
+using Xlent.Lever.Library.WebApi.Exceptions;
 
 namespace Dal
 {

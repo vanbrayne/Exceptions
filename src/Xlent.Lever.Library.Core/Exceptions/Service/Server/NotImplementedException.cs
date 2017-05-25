@@ -11,10 +11,23 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Server
     public class NotImplementedException : ServerException
     {
         public const string ExceptionTypeId = "573f806f-56b9-48a0-86d9-15d3bf6c9c6c";
-        public NotImplementedException() : base() { }
-        public NotImplementedException(string message) : base(message) { }
-        public NotImplementedException(string message, Exception innerException) : base(message, innerException) { }
+        public NotImplementedException() : this(null, null) { }
+        public NotImplementedException(string message) : this(message, null) { }
+        public NotImplementedException(IError error) : base(error)
+        {
+            SetProperties();
+        }
+        public NotImplementedException(string message, Exception innerException) : base(message, innerException)
+        {
+            SetProperties();
+        }
+
+        public override bool IsRetryMeaningful => false;
         public override string TypeId => ExceptionTypeId;
-        public override bool IsIdempotent => true;
+
+        private void SetProperties()
+        {
+            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+        }
     }
 }
