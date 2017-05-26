@@ -5,11 +5,11 @@ using Bll.Interfaces;
 using Facade.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.Core.Exceptions.Service;
-using Xlent.Lever.Library.Core.Exceptions.Service.Client;
-using Xlent.Lever.Library.Core.Exceptions.Service.Server;
+using Xlent.Lever.Library.Core.Exceptions;
+using Xlent.Lever.Library.Core.Exceptions.Client;
+using Xlent.Lever.Library.Core.Exceptions.Server;
 using Xlent.Lever.Library.WebApi.Exceptions;
-using Xlent.Lever.Library.WebApi.Exceptions.Dal.Client;
+using Xlent.Lever.Library.WebApi.Exceptions.Client;
 
 namespace Facade
 {

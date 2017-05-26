@@ -1,4 +1,4 @@
-﻿using Xlent.Lever.Library.Core.Exceptions.Service.Server;
+﻿using Xlent.Lever.Library.Core.Exceptions.Server;
 
 namespace Xlent.Lever.Library.Core.Exceptions
 {

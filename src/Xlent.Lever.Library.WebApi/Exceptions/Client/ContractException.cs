@@ -1,7 +1,7 @@
 ﻿using System;
-using Xlent.Lever.Library.Core.Exceptions.Service;
+using Xlent.Lever.Library.Core.Exceptions;
 
-namespace Xlent.Lever.Library.WebApi.Exceptions.Dal.Client
+namespace Xlent.Lever.Library.WebApi.Exceptions.Client
 {
     /// <summary>
     /// There was something wrong with the request itself, i.e. syntax, values out of range, etc.

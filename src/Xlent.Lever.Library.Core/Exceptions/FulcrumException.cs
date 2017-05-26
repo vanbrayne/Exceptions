@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Service
+namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// The base class for all Fulcrum exceptions

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Service.Server
+namespace Xlent.Lever.Library.Core.Exceptions.Server
 {
     /// <summary>
     /// The request requires some functionality that deliberately has been left out, at least for the moment.

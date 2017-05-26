@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xlent.Lever.Library.Core.Exceptions;
-using Xlent.Lever.Library.Core.Exceptions.Service;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
 {

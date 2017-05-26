@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Service.Client
+namespace Xlent.Lever.Library.Core.Exceptions.Client
 {
     /// <summary>
     /// The specified item could not be found.

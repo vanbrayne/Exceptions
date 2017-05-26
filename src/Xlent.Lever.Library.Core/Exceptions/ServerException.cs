@@ -1,4 +1,4 @@
-﻿namespace Xlent.Lever.Library.Core.Exceptions.Service
+﻿namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// Base class for exceptions that indicates that error is on the server side, i.e. the called function/service.
