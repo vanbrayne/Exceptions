@@ -29,7 +29,7 @@ namespace Facade
             }
             catch (System.Exception e)
             {
-                response = ExceptionHandler.ExceptionToHttpResponseMessage(e, true);
+                response = Converter.ToHttpResponseMessage(e, true);
             }
             return response;
         }
@@ -64,9 +64,6 @@ namespace Facade
                     break;
                 case ExpectedResultEnum.NotImplementedException:
                     fulcrumException = new NotImplementedException("Not implemented exception");
-                    break;
-                case ExpectedResultEnum.UnavailableException:
-                    fulcrumException = new UnavailableException("Unavailable exception");
                     break;
                 default:
                     fulcrumException = new AssertionFailedException($"Unexpected switch value: {expectedFacadeResult}");

@@ -5,7 +5,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
     /// <summary>
     /// The base class for all Fulcrum exceptions
     /// </summary>
-    public abstract class FulcrumException : Exception, IError
+    public abstract class FulcrumException : Exception, IFulcrumError
     {
         /// <summary>
         /// The current servent name. Can be set by calling <see cref="Initialize"/>.
@@ -45,7 +45,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// <summary>
         /// Mandatory indication for if it would be meaningful to try sending the request again.
         /// </summary>
-        public virtual bool IsRetryMeaningful { get; private set; }
+        public virtual bool IsRetryMeaningful { get; internal set; }
 
         /// <summary>
         /// If <see cref="IsRetryMeaningful"/> is true, then this optional property can give a recommended
@@ -97,17 +97,10 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
 
         protected FulcrumException() : this((string)null, null) { }
         protected FulcrumException(string message) : this(message, null) { }
-
-        protected FulcrumException(IError error) : this(error, null) { }
-
-        protected FulcrumException(IError error, Exception innerException) : base(error.TechnicalMessage, innerException)
-        {
-            CopyFrom(error);
-        }
         protected FulcrumException(string message, Exception innerException) : base(message, innerException)
         {
             TechnicalMessage = message;
-            var error = innerException as IError;
+            var error = innerException as IFulcrumError;
             if (error == null)
             {
                 InstanceId = Guid.NewGuid().ToString();
@@ -126,19 +119,19 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
             return this;
         }
 
-        public void CopyFrom(IError error)
+        public void CopyFrom(IFulcrumError fulcrumError)
         {
-            TechnicalMessage = error.TechnicalMessage;
-            FriendlyMessage = error.FriendlyMessage;
-            MoreInfoUrl = error.MoreInfoUrl;
-            IsRetryMeaningful = error.IsRetryMeaningful;
-            RecommendedWaitTimeInSeconds = error.RecommendedWaitTimeInSeconds;
-            ServerTechnicalName = error.ServerTechnicalName;
-            InstanceId = error.InstanceId;
-            Code = error.Code;
-            TypeId = error.TypeId;
-            CorrelationId = error.CorrelationId;
-            FriendlyMessageId = error.FriendlyMessageId;
+            TechnicalMessage = fulcrumError.TechnicalMessage;
+            FriendlyMessage = fulcrumError.FriendlyMessage;
+            MoreInfoUrl = fulcrumError.MoreInfoUrl;
+            IsRetryMeaningful = fulcrumError.IsRetryMeaningful;
+            RecommendedWaitTimeInSeconds = fulcrumError.RecommendedWaitTimeInSeconds;
+            ServerTechnicalName = fulcrumError.ServerTechnicalName;
+            InstanceId = fulcrumError.InstanceId;
+            Code = fulcrumError.Code;
+            TypeId = fulcrumError.TypeId;
+            CorrelationId = fulcrumError.CorrelationId;
+            FriendlyMessageId = fulcrumError.FriendlyMessageId;
         }
 
         public static void Initialize(string serverTechnicalName)

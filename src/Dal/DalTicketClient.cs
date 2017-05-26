@@ -13,7 +13,7 @@ namespace Dal
         public async Task<Ticket> GetTicketAsync(string ticketId, ExpectedResultEnum expectedFacadeResult)
         {
             var response = _ticketFacadeClient.GetTicket(ticketId, expectedFacadeResult);
-            var exception = await ExceptionHandler.HttpResponseMessageToFulcrumException(response, true);
+            var exception = await Converter.ToFulcrumExceptionAsync(response, true);
             if (exception != null)
             {
                 throw exception;

@@ -34,7 +34,7 @@ namespace Service.WebApi
             }
             catch (Exception e)
             {
-                response = ExceptionHandler.ExceptionToHttpResponseMessage(e, true);
+                response = Converter.ToHttpResponseMessage(e, true);
             }
             return response;
         }

@@ -28,7 +28,7 @@ namespace Service.WebApi.Test
         public async Task OkAsync()
         {
             var response = await _ticketService.GetTicketAsync(TicketId, "Ok");
-            var exception = await ExceptionHandler.HttpResponseMessageToFulcrumException(response);
+            var exception = await Converter.ToFulcrumExceptionAsync(response);
             if (exception != null) throw exception;
             var content = await GetContent(response);
             Assert.IsNotNull(content);
@@ -82,12 +82,6 @@ namespace Service.WebApi.Test
         {
             await VerifyException<NotImplementedException, NotImplementedException>();
         }
-
-        [TestMethod]
-        public async Task UnavailableException()
-        {
-            await VerifyException<UnavailableException, UnavailableException>();
-        }
         #endregion
 
         private async Task VerifyException<TFacadeException, TBllException>()
@@ -97,7 +91,7 @@ namespace Service.WebApi.Test
             var response = await _ticketService.GetTicketAsync(TicketId, typeof(TFacadeException).Name);
             var content = await GetContent(response);
             Assert.IsNotNull(content);
-            var error = Error.Parse(content);
+            var error = FulcrumError.Parse(content);
             Assert.IsNotNull(error, $"Expected a JSON formatted error. (Content was \"{content}\".");
             ValidateExceptionType<TBllException>(error);
             if (typeof(TFacadeException) == typeof(TBllException))
@@ -108,17 +102,17 @@ namespace Service.WebApi.Test
             }
         }
 
-        private static void ValidateExceptionType<T>(IError error)
+        private static void ValidateExceptionType<T>(IFulcrumError fulcrumError)
             where T : FulcrumException, new()
         {
             var expectedException = new T();
-            Assert.AreEqual(expectedException.TypeId, error.TypeId,
-                $"Expected error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId}. Error had type {error.TypeId}. Message was {error.TechnicalMessage}.");
-            Assert.AreEqual(expectedException.IsRetryMeaningful, error.IsRetryMeaningful,
-                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had IsRetryMeaningful set to {error.IsRetryMeaningful}.");
-            Assert.AreEqual(expectedException.RecommendedWaitTimeInSeconds, error.RecommendedWaitTimeInSeconds,
-                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had RecommendedWaitTimeInSeconds set to {error.RecommendedWaitTimeInSeconds}.");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(error.InstanceId));
+            Assert.AreEqual(expectedException.TypeId, fulcrumError.TypeId,
+                $"Expected error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId}. Error had type {fulcrumError.TypeId}. Message was {fulcrumError.TechnicalMessage}.");
+            Assert.AreEqual(expectedException.IsRetryMeaningful, fulcrumError.IsRetryMeaningful,
+                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had IsRetryMeaningful set to {fulcrumError.IsRetryMeaningful}.");
+            Assert.AreEqual(expectedException.RecommendedWaitTimeInSeconds, fulcrumError.RecommendedWaitTimeInSeconds,
+                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had RecommendedWaitTimeInSeconds set to {fulcrumError.RecommendedWaitTimeInSeconds}.");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(fulcrumError.InstanceId));
         }
 
         private static async Task<string> GetContent(HttpResponseMessage response)
