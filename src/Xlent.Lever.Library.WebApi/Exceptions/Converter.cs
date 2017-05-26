@@ -91,27 +91,37 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 
         public static HttpResponseMessage ToHttpResponseMessage(Exception e, bool mustMatchCoreExceptions = false)
         {
-            var error = ToFulcrumError(e);
-            if (error == null)
+            bool firstTime = true;
+            while (true)
             {
-                var message = $"The exception {e.GetType().FullName} was not recognized as a Fulcrum Exception. Message: {e.Message}";
-                error = ToFulcrumError(new AssertionFailedException(message, e));
-                if (error == null) throw new ApplicationException("Failed to convert AssertionFailedException to a FulcrumError.");
+                var error = ToFulcrumError(e);
+                if (error == null)
+                {
+                    var message = $"The exception {e.GetType().FullName} was not recognized as a Fulcrum Exception. Message: {e.Message}";
+                    if (!firstTime) throw new ApplicationException(message);
+                    firstTime = false;
+                    e = new AssertionFailedException(message, e);
+                    continue;
+                }
+                var statusCode = ToHttpStatusCode(error);
+                if (statusCode == null)
+                {
+                    var message =
+                        $"The TypeId of the following error could not be converted to an HTTP status code: {error.ToJsonString(Formatting.Indented)}.";
+                    if (!firstTime) throw new ApplicationException(message);
+                    firstTime = false;
+                    if (!mustMatchCoreExceptions) return null;
+                    e = new AssertionFailedException(message, e);
+                    continue;
+                }
+                var content = error.ToJsonString(Formatting.Indented);
+                var stringContent = new StringContent(content);
+                var response = new HttpResponseMessage(statusCode.Value)
+                {
+                    Content = stringContent
+                };
+                return response;
             }
-            var statusCode = ToHttpStatusCode(error);
-            if (statusCode == null)
-            {
-                if (!mustMatchCoreExceptions) return null;
-                throw new AssertionFailedException(
-                    $"The TypeId of the following error could not be converted to an HTTP status code: {error.ToJsonString(Formatting.Indented)}.");
-            }
-            var content = error.ToJsonString(Formatting.Indented);
-            var stringContent = new StringContent(content);
-            var response = new HttpResponseMessage(statusCode.Value)
-            {
-                Content = stringContent
-            };
-            return response;
         }
 
         public static FulcrumError ToFulcrumError(Exception e)
