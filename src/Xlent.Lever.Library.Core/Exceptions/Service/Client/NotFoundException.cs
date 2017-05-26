@@ -15,12 +15,8 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Client
     public class NotFoundException : ClientException
     {
         public const string ExceptionTypeId = "8108ca0d-14a3-4732-8b58-eb4151fb222d";
-        public NotFoundException() : this(null, null) { }
+        public NotFoundException() : this((string)null, null) { }
         public NotFoundException(string message) : this(message, null) { }
-        public NotFoundException(IError error) : base(error)
-        {
-            SetProperties();
-        }
         public NotFoundException(string message, Exception innerException) : base(message, innerException)
         {
             SetProperties();

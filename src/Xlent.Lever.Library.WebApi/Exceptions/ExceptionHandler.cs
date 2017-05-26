@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Xlent.Lever.Library.Core.Exceptions;
 using Xlent.Lever.Library.Core.Exceptions.Service;
 using Xlent.Lever.Library.Core.Exceptions.Service.Client;
 using Xlent.Lever.Library.Core.Exceptions.Service.Server;
@@ -26,77 +27,41 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             if (response.IsSuccessStatusCode) return null;
             if (response.Content == null) return null;
             var contentAsString = await response.Content?.ReadAsStringAsync();
-            if (string.IsNullOrWhiteSpace(contentAsString)) throw new AssertionFailedException($"Received an HTTP response with status code {response.StatusCode}. Expected a JSON formatted error as content, but the content was empty.");
-            var error = Error.Parse(contentAsString);
-            if (error == null) throw new AssertionFailedException($"Received an HTTP response with status code {response.StatusCode}. Expected a JSON formatted error as content, but the content was \"{contentAsString}\".");
-            FulcrumException fulcrumException;
-            // ReSharper disable once SwitchStatementMissingSomeCases
-            switch (response.StatusCode)
+            if (string.IsNullOrWhiteSpace(contentAsString))
             {
-                case HttpStatusCode.BadRequest:
-                    switch (error.TypeId)
-                    {
-                        case BusinessRuleException.ExceptionTypeId:
-                            fulcrumException = new BusinessRuleException(error);
-                            break;
-                        case ConflictException.ExceptionTypeId:
-                            fulcrumException = new ConflictException(error);
-                            break;
-                        case InputException.ExceptionTypeId:
-                            fulcrumException = new InputException(error);
-                            break;
-                        case NotFoundException.ExceptionTypeId:
-                            fulcrumException = new NotFoundException(error);
-                            break;
-                        default:
-                            fulcrumException = new AssertionFailedException($"Unexpected ExceptionTypeId ({error.TypeId}) for status code {response.StatusCode}. (Content was \"{contentAsString}\".");
-                            break;
-                    }
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    if (error.TypeId == UnauthorizedException.ExceptionTypeId)
-                    {
-                        fulcrumException = new UnauthorizedException(error);
-                    }
-                    else
-                    {
-                        fulcrumException = new AssertionFailedException($"Unexpected ExceptionTypeId ({error.TypeId}) for status code {response.StatusCode}. (Content was \"{contentAsString}\".");
-                    }
-                    break;
-                case HttpStatusCode.InternalServerError:
-                    switch (error.TypeId)
-                    {
-                        case AssertionFailedException.ExceptionTypeId:
-                            fulcrumException = new AssertionFailedException(error);
-                            break;
-                        case NotImplementedException.ExceptionTypeId:
-                            fulcrumException = new NotImplementedException(error);
-                            break;
-                        default:
-                            fulcrumException = new AssertionFailedException($"Unexpected ExceptionTypeId ({error.TypeId}) for status code {response.StatusCode}. (Content was \"{contentAsString}\".");
-                            break;
-                    }
-                    break;
-                case HttpStatusCode.ServiceUnavailable:
-                    switch (error.TypeId)
-                    {
-                        case UnavailableException.ExceptionTypeId:
-                            fulcrumException = new UnavailableException(error);
-                            break;
-                        case TryAgainException.ExceptionTypeId:
-                            fulcrumException = new TryAgainException(error);
-                            break;
-                        default:
-                            fulcrumException = new AssertionFailedException($"Unexpected ExceptionTypeId ({error.TypeId}) for status code {response.StatusCode}. (Content was \"{contentAsString}\".");
-                            break;
-                    }
-                    break;
-                default:
-                    fulcrumException = new AssertionFailedException($"Unexpeced status code {response.StatusCode}. (Content was \"{contentAsString}\".");
-                    break;
+                throw new AssertionFailedException(
+                    $"Received an HTTP response with status code {response.StatusCode}. Expected a JSON formatted error as content, but the content was empty.");
+            }
+            var error = Error.Parse(contentAsString);
+            if (error == null)
+            {
+                throw new AssertionFailedException(
+                    $"Received an HTTP response with status code {response.StatusCode}. Expected a JSON formatted error as content, but the content was \"{contentAsString}\".");
+            }
+            ValidateStatusCode(response.StatusCode, error);
+            var fulcrumException = ToFulcrumException(error);
+            if (fulcrumException == null)
+            {
+                var message = $"The TypeId ({error.TypeId}) was not recognized: {error.ToJsonString(Formatting.Indented)}";
+                return new AssertionFailedException(message, ToFulcrumException(error.InnerError));
             }
             if (convertFromServerToClient) fulcrumException = fulcrumException.FromServerToClient(serverName);
             return fulcrumException;
+        }
+
+        private static void ValidateStatusCode(HttpStatusCode statusCode, Error error)
+        {
+            var expectedStatusCode = ToHttpStatusCode(error);
+            if (expectedStatusCode == null)
+            {
+                throw new AssertionFailedException(
+                    $"The TypeId of the content could not be converted to an HTTP status code: {error.ToJsonString(Formatting.Indented)}.");
+            }
+            if (expectedStatusCode != statusCode)
+            {
+                throw new AssertionFailedException(
+                    $"The HTTP error response had status code {statusCode}, but was expected to have {expectedStatusCode.Value}, due to the TypeId in the content: \"{error.ToJsonString(Formatting.Indented)}");
+            }
         }
 
         public static HttpResponseMessage ExceptionToHttpResponseMessage(Exception e, bool mustMatchCoreExceptions = false)
@@ -142,14 +107,6 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
                 };
 
             }
-            else if (fulcrumException is UnavailableException
-                || fulcrumException is TryAgainException)
-            {
-                response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
-                {
-                    Content = stringContent
-                };
-            }
             else if (mustMatchCoreExceptions)
             {
                 var message = $"Unexpected exception: {fulcrumException.GetType().FullName}: {fulcrumException.Message}";
@@ -159,6 +116,67 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
                 };
             }
             return response;
+        }
+
+        private static HttpStatusCode? ToHttpStatusCode(IError error)
+        {
+            switch (error.TypeId)
+            {
+                case BusinessRuleException.ExceptionTypeId:
+                case InputException.ExceptionTypeId:
+                case NotFoundException.ExceptionTypeId:
+                    return HttpStatusCode.BadRequest;
+                case ConflictException.ExceptionTypeId:
+                    return HttpStatusCode.Conflict;
+                case UnauthorizedException.ExceptionTypeId:
+                    return HttpStatusCode.Unauthorized;
+                case AssertionFailedException.ExceptionTypeId:
+                    return HttpStatusCode.InternalServerError;
+                case NotImplementedException.ExceptionTypeId:
+                    return HttpStatusCode.InternalServerError;
+                case TryAgainException.ExceptionTypeId:
+                    return HttpStatusCode.ServiceUnavailable;
+                default:
+                    return null;
+            }
+        }
+
+        private static FulcrumException ToFulcrumException(Error error)
+        {
+            if (error == null) return null;
+            FulcrumException fulcrumException;
+            switch (error.TypeId)
+            {
+                case BusinessRuleException.ExceptionTypeId:
+                    fulcrumException = new BusinessRuleException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case ConflictException.ExceptionTypeId:
+                    fulcrumException = new ConflictException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case InputException.ExceptionTypeId:
+                    fulcrumException = new InputException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case NotFoundException.ExceptionTypeId:
+                    fulcrumException = new NotFoundException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case UnauthorizedException.ExceptionTypeId:
+                    fulcrumException = new UnauthorizedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case AssertionFailedException.ExceptionTypeId:
+                    fulcrumException = new AssertionFailedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case NotImplementedException.ExceptionTypeId:
+                    fulcrumException = new NotImplementedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                case TryAgainException.ExceptionTypeId:
+                    fulcrumException = new TryAgainException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                    break;
+                default:
+                    return null;
+
+            }
+            fulcrumException.CopyFrom(error);
+            return fulcrumException;
         }
     }
 }

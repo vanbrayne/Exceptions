@@ -9,12 +9,8 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Server
     {
         public const string ExceptionTypeId = "5350b10d-0ac5-4802-aa9b-a9016c7bf636";
         public TimeSpan RetryAfterTimeSpan { get; set; }
-        public TryAgainException() : this(null, null) { }
+        public TryAgainException() : this((string)null, null) { }
         public TryAgainException(string message) : this(message, null) { }
-        public TryAgainException(IError error) : base(error)
-        {
-            SetProperties();
-        }
         public TryAgainException(string message, Exception innerException) : base(message, innerException)
         {
             SetProperties();

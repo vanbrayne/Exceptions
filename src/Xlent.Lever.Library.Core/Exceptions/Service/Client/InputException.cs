@@ -9,12 +9,8 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Client
     public class InputException : ClientException
     {
         public const string ExceptionTypeId = "659f879a-299a-4c11-921f-466fde971c13";
-        public InputException() : this(null, null) { }
+        public InputException() : this((string)null, null) { }
         public InputException(string message) : this(message, null) { }
-        public InputException(IError error) : base(error)
-        {
-            SetProperties();
-        }
         public InputException(string message, Exception innerException) : base(message, innerException)
         {
             SetProperties();

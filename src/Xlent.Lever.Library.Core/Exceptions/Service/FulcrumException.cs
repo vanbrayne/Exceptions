@@ -26,7 +26,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
         /// If this property has not been set, the recommendation is to treat the <see cref="System.Exception.Message"/>
         /// property as the technical message.
         /// </remarks>
-        public string TechnicalMessage{ get; set; }
+        public string TechnicalMessage { get; set; }
 
         /// <summary>
         /// An optional human readable error message that can potentially be shown directly to an application
@@ -95,10 +95,12 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
 
 
 
-        protected FulcrumException() : this(null, null) { }
-        protected FulcrumException(string message) : this(message,null) { }
+        protected FulcrumException() : this((string)null, null) { }
+        protected FulcrumException(string message) : this(message, null) { }
 
-        protected FulcrumException(IError error)
+        protected FulcrumException(IError error) : this(error, null) { }
+
+        protected FulcrumException(IError error, Exception innerException) : base(error.TechnicalMessage, innerException)
         {
             CopyFrom(error);
         }
@@ -141,7 +143,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
 
         public static void Initialize(string serverTechnicalName)
         {
-            if(serverTechnicalName == null) throw new ArgumentNullException(nameof(serverTechnicalName));
+            if (serverTechnicalName == null) throw new ArgumentNullException(nameof(serverTechnicalName));
             serverTechnicalName = serverTechnicalName.ToLower();
             if (_serverTechnicalName != null && _serverTechnicalName != serverTechnicalName) throw new ApplicationException("Once the server name has been set, it can't be changed.");
             _serverTechnicalName = serverTechnicalName;

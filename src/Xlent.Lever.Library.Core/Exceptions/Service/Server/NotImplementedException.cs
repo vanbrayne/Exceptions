@@ -11,12 +11,8 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Server
     public class NotImplementedException : ServerException
     {
         public const string ExceptionTypeId = "573f806f-56b9-48a0-86d9-15d3bf6c9c6c";
-        public NotImplementedException() : this(null, null) { }
+        public NotImplementedException() : this((string)null, null) { }
         public NotImplementedException(string message) : this(message, null) { }
-        public NotImplementedException(IError error) : base(error)
-        {
-            SetProperties();
-        }
         public NotImplementedException(string message, Exception innerException) : base(message, innerException)
         {
             SetProperties();

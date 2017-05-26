@@ -122,7 +122,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             return JObject.FromObject(this).ToString(formatting);
         }
 
-        public static IError Parse(string s)
+        public static Error Parse(string s)
         {
             if (s == null) return null;
             try
