@@ -1,5 +1,6 @@
 ﻿using System;
 using Xlent.Lever.Library.Core.Exceptions;
+using Xlent.Lever.Library.Core.Exceptions.Client;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions.Client
 {

@@ -1,4 +1,4 @@
-﻿namespace Xlent.Lever.Library.Core.Exceptions
+﻿namespace Xlent.Lever.Library.Core.Exceptions.Client
 {
     /// <summary>
     /// Base class for exceptions that indicates that error is on the client side, i.e. the caller
