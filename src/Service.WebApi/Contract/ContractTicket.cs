@@ -1,4 +1,4 @@
-﻿namespace Service.WebApi
+﻿namespace Service.WebApi.Contract
 {
     public class ContractTicket
     {

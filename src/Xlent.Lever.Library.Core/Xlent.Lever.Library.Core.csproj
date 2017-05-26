@@ -41,18 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\Assert.cs" />
-    <Compile Include="Exceptions\ExceptionHandler.cs" />
-    <Compile Include="Exceptions\Service\ClientException.cs" />
-    <Compile Include="Exceptions\Service\Client\BusinessRuleException.cs" />
-    <Compile Include="Exceptions\Service\Client\ConflictException.cs" />
-    <Compile Include="Exceptions\Service\Client\InputException.cs" />
-    <Compile Include="Exceptions\Service\Client\NotFoundException.cs" />
-    <Compile Include="Exceptions\Service\Client\UnauthorizedException.cs" />
-    <Compile Include="Exceptions\Service\FulcrumException.cs" />
-    <Compile Include="Exceptions\Service\ServerException.cs" />
-    <Compile Include="Exceptions\Service\Server\AssertionFailedException.cs" />
-    <Compile Include="Exceptions\Service\Server\NotImplementedException.cs" />
-    <Compile Include="Exceptions\Service\Server\UnavailableException.cs" />
+    <Compile Include="Exceptions\BllContract.cs" />
+    <Compile Include="Exceptions\Client\ContractException.cs" />
+    <Compile Include="Exceptions\ContractSupport.cs" />
+    <Compile Include="Exceptions\IFulcrumError.cs" />
+    <Compile Include="Exceptions\Client\ClientException.cs" />
+    <Compile Include="Exceptions\Client\BusinessRuleException.cs" />
+    <Compile Include="Exceptions\Client\ConflictException.cs" />
+    <Compile Include="Exceptions\Client\NotFoundException.cs" />
+    <Compile Include="Exceptions\FulcrumException.cs" />
+    <Compile Include="Exceptions\Server\ServerException.cs" />
+    <Compile Include="Exceptions\Server\AssertionFailedException.cs" />
+    <Compile Include="Exceptions\Server\NotImplementedException.cs" />
+    <Compile Include="Exceptions\Server\TryAgainException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -56,6 +56,10 @@
       <Project>{2CE4F36A-A610-4F4E-9BE6-C02EF1C6C848}</Project>
       <Name>CompositionRoot</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Xlent.Lever.Library.Core\Xlent.Lever.Library.Core.csproj">
+      <Project>{D942E46F-DAC9-4335-9C3B-7050C9CE77AB}</Project>
+      <Name>Xlent.Lever.Library.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Xlent.Lever.Library.WebApi\Xlent.Lever.Library.WebApi.csproj">
       <Project>{263161b3-285a-4e21-86cf-72dc28ee6218}</Project>
       <Name>Xlent.Lever.Library.WebApi</Name>

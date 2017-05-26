@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Bll.Interfaces;
 using Bll.Models;
+using Xlent.Lever.Library.Core.Exceptions;
 
 namespace Bll
 {
@@ -14,6 +15,7 @@ namespace Bll
         }
         public async Task<Ticket> GetTicketAsync(string ticketId, ExpectedResultEnum expectedFacadeResult)
         {
+            BllContract.Require(nameof(expectedFacadeResult), expectedFacadeResult, x => x != ExpectedResultEnum.ContractException);
             var ticket = await _dalClient.GetTicketAsync(ticketId, expectedFacadeResult);
             return ticket;
         }

@@ -2,10 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.Core.Exceptions.Service;
-using Xlent.Lever.Library.Core.Exceptions.Service.Client;
-using Xlent.Lever.Library.Core.Exceptions.Service.Server;
-using Xlent.Lever.Library.WebApi;
+using Service.WebApi.Contract;
+using Xlent.Lever.Library.Core.Exceptions;
+using Xlent.Lever.Library.Core.Exceptions.Client;
+using Xlent.Lever.Library.Core.Exceptions.Server;
+using Xlent.Lever.Library.WebApi.Exceptions;
+using Xlent.Lever.Library.WebApi.Exceptions.Client;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace Service.WebApi.Test
 {
@@ -25,7 +28,7 @@ namespace Service.WebApi.Test
         public async Task OkAsync()
         {
             var response = await _ticketService.GetTicketAsync(TicketId, "Ok");
-            var exception = await ExceptionHandler.HttpResponseMessageToFulcrumException(response);
+            var exception = await Converter.ToFulcrumExceptionAsync(response);
             if (exception != null) throw exception;
             var content = await GetContent(response);
             Assert.IsNotNull(content);
@@ -49,9 +52,15 @@ namespace Service.WebApi.Test
         }
 
         [TestMethod]
-        public async Task InputException()
+        public async Task ServerContractException()
         {
-            await VerifyException<InputException, AssertionFailedException>();
+            await VerifyException<ServerContractException, AssertionFailedException>();
+        }
+
+        [TestMethod]
+        public async Task ContractException()
+        {
+            await VerifyException<ContractException, AssertionFailedException>();
         }
 
         [TestMethod]
@@ -65,45 +74,68 @@ namespace Service.WebApi.Test
         {
             await VerifyException<UnauthorizedException, AssertionFailedException>();
         }
+
+        [TestMethod]
+        public async Task ApiContractException()
+        {
+            var response = await _ticketService.GetTicketAsync(null, "IGNORE");
+            var content = await GetContent(response);
+            Assert.IsNotNull(content);
+            var error = FulcrumError.Parse(content);
+            Assert.IsNotNull(error, $"Expected a JSON formatted error. (Content was \"{content}\".");
+            ValidateExceptionType<ServerContractException>(error);
+        }
         #endregion
 
         #region Server exceptions
         [TestMethod]
         public async Task AssertionFailedException()
         {
-            await VerifyException<AssertionFailedException, AssertionFailedException>();
+            await VerifyException<AssertionFailedException, AssertionFailedException>(true);
         }
 
         [TestMethod]
         public async Task NotImplementedException()
         {
-            await VerifyException<NotImplementedException, NotImplementedException>();
+            await VerifyException<NotImplementedException, AssertionFailedException>();
         }
 
         [TestMethod]
-        public async Task UnavailableException()
+        public async Task TryAgainException()
         {
-            await VerifyException<UnavailableException, UnavailableException>();
+            await VerifyException<TryAgainException, TryAgainException>();
         }
         #endregion
 
-        private async Task VerifyException<TFacadeException, TBllException>()
+        private async Task VerifyException<TFacadeException, TBllException>(bool expectCopy = false)
             where TFacadeException : FulcrumException
-            where TBllException : FulcrumException
+            where TBllException : FulcrumException, new()
         {
             var response = await _ticketService.GetTicketAsync(TicketId, typeof(TFacadeException).Name);
             var content = await GetContent(response);
-            var exception = await ExceptionHandler.HttpResponseMessageToFulcrumException(response);
-            Assert.IsNotNull(exception, $"Expected an exception. (Content was \"{content}\".");
-            ValidateExceptionType<TBllException>(exception);
+            Assert.IsNotNull(content);
+            var error = FulcrumError.Parse(content);
+            Assert.IsNotNull(error, $"Expected a JSON formatted error. (Content was \"{content}\".");
+            ValidateExceptionType<TBllException>(error);
+            if (typeof(TFacadeException) == typeof(TBllException) && !expectCopy)
+            {
+                // The following condition has been specially prepared for in the mock service.
+                // This would never happen in real life.
+                Assert.AreEqual(error.InstanceId, error.Code);
+            }
         }
 
-        private static void ValidateExceptionType<T>(System.Exception e)
-            where T : FulcrumException
+        private static void ValidateExceptionType<T>(IFulcrumError fulcrumError)
+            where T : FulcrumException, new()
         {
-            Assert.IsNotNull(e as T, $"Expected Fulcrum exception {typeof(T).Name}. Exception was {e.GetType().FullName}. Message was {e.Message}.");
-            var fulcrumException = e as FulcrumException;
-            Assert.AreEqual("75573277-52e0-4ece-b9f2-79d7bc7d0658", fulcrumException?.InstanceId);
+            var expectedException = new T();
+            Assert.AreEqual(expectedException.TypeId, fulcrumError.TypeId,
+                $"Expected error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId}. Error had type {fulcrumError.GetType().FullName} ({fulcrumError.TypeId}). Message was {fulcrumError.TechnicalMessage}.");
+            Assert.AreEqual(expectedException.IsRetryMeaningful, fulcrumError.IsRetryMeaningful,
+                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had IsRetryMeaningful set to {fulcrumError.IsRetryMeaningful}.");
+            Assert.AreEqual(expectedException.RecommendedWaitTimeInSeconds, fulcrumError.RecommendedWaitTimeInSeconds,
+                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had RecommendedWaitTimeInSeconds set to {fulcrumError.RecommendedWaitTimeInSeconds}.");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(fulcrumError.InstanceId));
         }
 
         private static async Task<string> GetContent(HttpResponseMessage response)

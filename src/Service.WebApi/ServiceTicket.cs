@@ -9,7 +9,9 @@ using Bll.Models;
 using CompositionRoot;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.WebApi;
+using Service.WebApi.Contract;
+using Xlent.Lever.Library.Core.Exceptions;
+using Xlent.Lever.Library.WebApi.Exceptions;
 
 namespace Service.WebApi
 {
@@ -22,19 +24,34 @@ namespace Service.WebApi
             HttpResponseMessage response;
             try
             {
-                var ticket = ToContract(await TicketLogic.GetTicketAsync(ticketId, ExpectedResultFromContract(expectedFacadeResult)));
-                var json = JObject.FromObject(ticket);
-                response = new HttpResponseMessage(HttpStatusCode.OK)
+                ServerContract.RequireNotNullOrWhitespace(nameof(ticketId), ticketId);
+                ServerContract.RequireNotNullOrWhitespace(nameof(expectedFacadeResult), expectedFacadeResult);
+
+                try
                 {
-                    Content = new StringContent(json.ToString(Formatting.Indented), Encoding.UTF8,
-                        "application/json")
-                };
-            
+                    var ticket =
+                        ToContract(await TicketLogic.GetTicketAsync(ticketId,
+                            ExpectedResultFromContract(expectedFacadeResult)));
+                    var json = JObject.FromObject(ticket);
+                    response = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(json.ToString(Formatting.Indented), Encoding.UTF8,
+                            "application/json")
+                    };
+
+                }
+                catch (Exception e)
+                {
+                    var fulcrumException = e as FulcrumException;
+                    if (fulcrumException != null) e = Converter.FromBllToServer(fulcrumException);
+                    response = Converter.ToHttpResponseMessage(e, true);
+                }
             }
             catch (Exception e)
             {
-                response = ExceptionHandler.ExceptionToHttpResponseMessage(e);
+                response = Converter.ToHttpResponseMessage(e, true);
             }
+            
             return response;
         }
 
@@ -48,8 +65,10 @@ namespace Service.WebApi
                     return ExpectedResultEnum.BusinessRuleException;
                 case "ConflictException":
                     return ExpectedResultEnum.ConflictException;
-                case "InputException":
-                    return ExpectedResultEnum.InputException;
+                case "ContractException":
+                    return ExpectedResultEnum.ContractException;
+                case "ServerContractException":
+                    return ExpectedResultEnum.ServerContractException;
                 case "NotFoundException":
                     return ExpectedResultEnum.NotFoundException;
                 case "UnauthorizedException":
@@ -58,8 +77,8 @@ namespace Service.WebApi
                     return ExpectedResultEnum.AssertionFailedException;
                 case "NotImplementedException":
                     return ExpectedResultEnum.NotImplementedException;
-                case "UnavailableException":
-                    return ExpectedResultEnum.UnavailableException;
+                case "TryAgainException":
+                    return ExpectedResultEnum.TryAgainException;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(expectedFacadeResult));
             }

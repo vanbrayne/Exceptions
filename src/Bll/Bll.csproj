@@ -45,5 +45,11 @@
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Xlent.Lever.Library.Core\Xlent.Lever.Library.Core.csproj">
+      <Project>{D942E46F-DAC9-4335-9C3B-7050C9CE77AB}</Project>
+      <Name>Xlent.Lever.Library.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

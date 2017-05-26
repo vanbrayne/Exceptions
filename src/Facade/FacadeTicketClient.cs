@@ -5,10 +5,11 @@ using Bll.Interfaces;
 using Facade.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.Core.Exceptions.Service;
-using Xlent.Lever.Library.Core.Exceptions.Service.Client;
-using Xlent.Lever.Library.Core.Exceptions.Service.Server;
-using Xlent.Lever.Library.WebApi;
+using Xlent.Lever.Library.Core.Exceptions;
+using Xlent.Lever.Library.Core.Exceptions.Client;
+using Xlent.Lever.Library.Core.Exceptions.Server;
+using Xlent.Lever.Library.WebApi.Exceptions;
+using Xlent.Lever.Library.WebApi.Exceptions.Client;
 
 namespace Facade
 {
@@ -29,7 +30,7 @@ namespace Facade
             }
             catch (System.Exception e)
             {
-                response = ExceptionHandler.ExceptionToHttpResponseMessage(e);
+                response = Converter.ToHttpResponseMessage(e, true);
             }
             return response;
         }
@@ -50,8 +51,8 @@ namespace Facade
                 case ExpectedResultEnum.ConflictException:
                     fulcrumException = new ConflictException("Conflict exception");
                     break;
-                case ExpectedResultEnum.InputException:
-                    fulcrumException = new InputException("Input exception");
+                case ExpectedResultEnum.ServerContractException:
+                    fulcrumException = new ServerContractException("Contract exception");
                     break;
                 case ExpectedResultEnum.NotFoundException:
                     fulcrumException = new NotFoundException("Not found exception");
@@ -65,14 +66,15 @@ namespace Facade
                 case ExpectedResultEnum.NotImplementedException:
                     fulcrumException = new NotImplementedException("Not implemented exception");
                     break;
-                case ExpectedResultEnum.UnavailableException:
-                    fulcrumException = new UnavailableException("Unavailable exception");
+                case ExpectedResultEnum.TryAgainException:
+                    fulcrumException = new TryAgainException("Try again exception");
                     break;
                 default:
                     fulcrumException = new AssertionFailedException($"Unexpected switch value: {expectedFacadeResult}");
                     break;
             }
-            fulcrumException.InstanceId = "75573277-52e0-4ece-b9f2-79d7bc7d0658";
+            // This is to be able to test that the properties are copied all the way back to the test case.
+            fulcrumException.Code = fulcrumException.InstanceId;
             throw fulcrumException;
         }
     }
