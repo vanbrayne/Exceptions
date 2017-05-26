@@ -7,7 +7,7 @@ using Xlent.Lever.Library.Core.Exceptions;
 using Xlent.Lever.Library.Core.Exceptions.Service;
 using Xlent.Lever.Library.Core.Exceptions.Service.Client;
 using Xlent.Lever.Library.Core.Exceptions.Service.Server;
-using Xlent.Lever.Library.WebApi.Exceptions.Service.Client;
+using Xlent.Lever.Library.WebApi.Exceptions.Dal.Client;
 using NotImplementedException = Xlent.Lever.Library.Core.Exceptions.Service.Server.NotImplementedException;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
@@ -22,7 +22,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
     /// </summary>
     public class Converter
     {
-        public static async Task<FulcrumException> ToFulcrumExceptionAsync(HttpResponseMessage response, bool convertFromServerToClient = false, string serverName = null)
+        public static async Task<FulcrumException> ToFulcrumExceptionAsync(HttpResponseMessage response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
             if (response.IsSuccessStatusCode) return null;
@@ -41,13 +41,9 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             }
             ValidateStatusCode(response.StatusCode, error);
             var fulcrumException = ToFulcrumException(error);
-            if (fulcrumException == null)
-            {
-                var message = $"The TypeId ({error.TypeId}) was not recognized: {error.ToJsonString(Formatting.Indented)}";
-                return new AssertionFailedException(message, ToFulcrumException(error.InnerError));
-            }
-            if (convertFromServerToClient) fulcrumException = fulcrumException.FromServerToClient(serverName);
-            return fulcrumException;
+            if (fulcrumException != null) return fulcrumException;
+            var message = $"The TypeId ({error.TypeId}) was not recognized: {error.ToJsonString(Formatting.Indented)}";
+            return new AssertionFailedException(message, ToFulcrumException(error.InnerError));
         }
 
         public static FulcrumException ToFulcrumException(FulcrumError error)
@@ -127,6 +123,24 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             error.CopyFrom(fulcrumException);
             error.InnerError = ToFulcrumError(fulcrumException.InnerException);
             return error;
+        }
+
+        public static FulcrumException FromDalToBll(FulcrumException source, string serverTechnicalName)
+        {
+            if (source == null) return null;
+            switch (source.TypeId)
+            {
+                case AssertionFailedException.ExceptionTypeId:
+                case NotImplementedException.ExceptionTypeId:
+                    return new AssertionFailedException($"Did not expect {serverTechnicalName ?? "server"} to return the following error: {source.Message}", source);
+                case ContractException.ExceptionTypeId:
+                    return new AssertionFailedException($"Bad call to { serverTechnicalName ?? "Server" }: { source.Message}", source);
+                case UnauthorizedException.ExceptionTypeId:
+                    return new AssertionFailedException($"Unauthorized call to {serverTechnicalName ?? "server"}: {source.Message}", source);
+                default:
+                    source.ServerTechnicalName = serverTechnicalName;
+                    return source;
+            }
         }
 
         private static void ValidateStatusCode(HttpStatusCode statusCode, FulcrumError error)

@@ -45,8 +45,8 @@
   <ItemGroup>
     <Compile Include="Exceptions\FulcrumError.cs" />
     <Compile Include="Exceptions\Converter.cs" />
-    <Compile Include="Exceptions\Service\Client\ContractException.cs" />
-    <Compile Include="Exceptions\Service\Client\UnauthorizedException.cs" />
+    <Compile Include="Exceptions\Dal\Client\ContractException.cs" />
+    <Compile Include="Exceptions\Dal\Client\UnauthorizedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

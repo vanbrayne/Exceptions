@@ -1,8 +1,7 @@
 ﻿using System;
 using Xlent.Lever.Library.Core.Exceptions.Service;
-using Xlent.Lever.Library.Core.Exceptions.Service.Server;
 
-namespace Xlent.Lever.Library.WebApi.Exceptions.Service.Client
+namespace Xlent.Lever.Library.WebApi.Exceptions.Dal.Client
 {
     /// <summary>
     /// Authorization was missing or not accepted.
@@ -19,15 +18,6 @@ namespace Xlent.Lever.Library.WebApi.Exceptions.Service.Client
 
         public override bool IsRetryMeaningful => false;
         public override string TypeId => ExceptionTypeId;
-
-        public override FulcrumException FromServerToClient(string serverTechnicalName)
-        {
-            ServerTechnicalName = serverTechnicalName;
-            var e =
-                new AssertionFailedException(
-                    $"The service made an unauthorized call to {ServerTechnicalName ?? "server"}: {Message}", this);
-            return e;
-        }
 
         private void SetProperties()
         {

@@ -114,11 +114,6 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service
             FriendlyMessageId = error.FriendlyMessageId;
         }
 
-        public virtual FulcrumException FromServerToClient(string serverTechnicalName)
-        {
-            return this;
-        }
-
         public void CopyFrom(IFulcrumError fulcrumError)
         {
             TechnicalMessage = fulcrumError.TechnicalMessage;
