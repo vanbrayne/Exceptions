@@ -24,23 +24,34 @@ namespace Service.WebApi
             HttpResponseMessage response;
             try
             {
-                var ticket =
-                    ToContract(await TicketLogic.GetTicketAsync(ticketId,
-                        ExpectedResultFromContract(expectedFacadeResult)));
-                var json = JObject.FromObject(ticket);
-                response = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(json.ToString(Formatting.Indented), Encoding.UTF8,
-                        "application/json")
-                };
+                ServerContract.RequireNotNullOrWhitespace(nameof(ticketId), ticketId);
+                ServerContract.RequireNotNullOrWhitespace(nameof(expectedFacadeResult), expectedFacadeResult);
 
+                try
+                {
+                    var ticket =
+                        ToContract(await TicketLogic.GetTicketAsync(ticketId,
+                            ExpectedResultFromContract(expectedFacadeResult)));
+                    var json = JObject.FromObject(ticket);
+                    response = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(json.ToString(Formatting.Indented), Encoding.UTF8,
+                            "application/json")
+                    };
+
+                }
+                catch (Exception e)
+                {
+                    var fulcrumException = e as FulcrumException;
+                    if (fulcrumException != null) e = Converter.FromBllToServer(fulcrumException);
+                    response = Converter.ToHttpResponseMessage(e, true);
+                }
             }
             catch (Exception e)
             {
-                var fulcrumException = e as FulcrumException;
-                if (fulcrumException != null) e = Converter.FromBllToServer(fulcrumException);
                 response = Converter.ToHttpResponseMessage(e, true);
             }
+            
             return response;
         }
 

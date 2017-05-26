@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ServerContract.cs" />
     <Compile Include="Exceptions\FulcrumError.cs" />
     <Compile Include="Exceptions\Converter.cs" />
     <Compile Include="Exceptions\Client\ServerContractException.cs" />
