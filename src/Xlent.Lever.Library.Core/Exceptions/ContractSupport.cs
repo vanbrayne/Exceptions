@@ -20,12 +20,24 @@ namespace Xlent.Lever.Library.Core.Exceptions
             return $"{parameterName} ({parameterValue}) is required to fulfil {condition}.";
         }
 
+        public static string GetErrorMessageIfNull<T>(string parameterName, T parameterValue)
+        {
+            return parameterValue != null ? null : $"{parameterName} must not be null.";
+        }
+
+        public static string GetErrorMessageIfNullOrWhitespace(string parameterName, string parameterValue)
+        {
+            if (!string.IsNullOrWhiteSpace(parameterValue)) return null;
+            var value = parameterValue == null ? "null" : $"\"{parameterValue}\"";
+            return $"{parameterName} ({value}) must not be null, empty or whitespace.";
+        }
+
         public static string GetErrorMessageIfFalse(Expression<Func<bool>> requirementExpression)
         {
             if (requirementExpression.Compile()()) return null;
 
             var condition = requirementExpression.Body.ToString();
-            return $"Call must fulfil {condition}.";
+            return $"The call must fulfil {condition}.";
         }
     }
 }

@@ -17,6 +17,21 @@ namespace Xlent.Lever.Library.Core.Exceptions
             if (message == null) return;
             throw new ContractException(message);
         }
+
+        public static void RequireNotNull<TParameter>(string parameterName, TParameter parameterValue)
+        {
+            var message = ContractSupport.GetErrorMessageIfNull(parameterName, parameterValue);
+            if (message == null) return;
+            throw new ContractException(message);
+        }
+
+        public static void RequireNotNullOrWhitespace(string parameterName, string parameterValue)
+        {
+            var message = ContractSupport.GetErrorMessageIfNullOrWhitespace(parameterName, parameterValue);
+            if (message == null) return;
+            throw new ContractException(message);
+        }
+
         public static void Require(Expression<Func<bool>> requirementExpression)
         {
             var message = ContractSupport.GetErrorMessageIfFalse(requirementExpression);
