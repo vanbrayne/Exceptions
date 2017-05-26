@@ -152,6 +152,18 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             }
         }
 
+        public static FulcrumException FromBllToServer(FulcrumException source)
+        {
+            if (source == null) return null;
+            switch (source.TypeId)
+            {
+                case ContractException.ExceptionTypeId:
+                    return new AssertionFailedException($"Unexpected error: {source.Message}", source);
+                default:
+                    return source;
+            }
+        }
+
         private static void ValidateStatusCode(HttpStatusCode statusCode, FulcrumError error)
         {
             var expectedStatusCode = ToHttpStatusCode(error);
