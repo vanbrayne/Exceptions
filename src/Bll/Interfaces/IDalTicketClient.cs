@@ -9,6 +9,7 @@ namespace Bll.Interfaces
         BusinessRuleException,
         ConflictException,
         ContractException,
+        ServerContractException,
         NotFoundException,
         UnauthorizedException,
         AssertionFailedException,

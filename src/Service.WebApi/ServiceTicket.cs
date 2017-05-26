@@ -51,6 +51,8 @@ namespace Service.WebApi
                     return ExpectedResultEnum.ConflictException;
                 case "ContractException":
                     return ExpectedResultEnum.ContractException;
+                case "ServerContractException":
+                    return ExpectedResultEnum.ServerContractException;
                 case "NotFoundException":
                     return ExpectedResultEnum.NotFoundException;
                 case "UnauthorizedException":

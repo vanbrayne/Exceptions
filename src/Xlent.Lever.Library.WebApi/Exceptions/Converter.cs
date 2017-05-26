@@ -57,8 +57,8 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
                 case ConflictException.ExceptionTypeId:
                     exception = new ConflictException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
-                case ContractException.ExceptionTypeId:
-                    exception = new ContractException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+                case ServerContractException.ExceptionTypeId:
+                    exception = new ServerContractException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case NotFoundException.ExceptionTypeId:
                     exception = new NotFoundException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
@@ -142,7 +142,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
                 case AssertionFailedException.ExceptionTypeId:
                 case NotImplementedException.ExceptionTypeId:
                     return new AssertionFailedException($"Did not expect {serverTechnicalName ?? "server"} to return the following error: {source.Message}", source);
-                case ContractException.ExceptionTypeId:
+                case ServerContractException.ExceptionTypeId:
                     return new AssertionFailedException($"Bad call to { serverTechnicalName ?? "Server" }: { source.Message}", source);
                 case UnauthorizedException.ExceptionTypeId:
                     return new AssertionFailedException($"Unauthorized call to {serverTechnicalName ?? "server"}: {source.Message}", source);
@@ -172,7 +172,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             switch (error.TypeId)
             {
                 case BusinessRuleException.ExceptionTypeId:
-                case ContractException.ExceptionTypeId:
+                case ServerContractException.ExceptionTypeId:
                 case NotFoundException.ExceptionTypeId:
                     return HttpStatusCode.BadRequest;
                 case ConflictException.ExceptionTypeId:

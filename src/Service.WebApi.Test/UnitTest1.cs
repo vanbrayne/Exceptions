@@ -52,7 +52,13 @@ namespace Service.WebApi.Test
         }
 
         [TestMethod]
-        public async Task InputException()
+        public async Task ServerContractException()
+        {
+            await VerifyException<ServerContractException, AssertionFailedException>();
+        }
+
+        [TestMethod]
+        public async Task ContractException()
         {
             await VerifyException<ContractException, AssertionFailedException>();
         }

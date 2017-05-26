@@ -51,8 +51,8 @@ namespace Facade
                 case ExpectedResultEnum.ConflictException:
                     fulcrumException = new ConflictException("Conflict exception");
                     break;
-                case ExpectedResultEnum.ContractException:
-                    fulcrumException = new ContractException("Contract exception");
+                case ExpectedResultEnum.ServerContractException:
+                    fulcrumException = new ServerContractException("Contract exception");
                     break;
                 case ExpectedResultEnum.NotFoundException:
                     fulcrumException = new NotFoundException("Not found exception");
