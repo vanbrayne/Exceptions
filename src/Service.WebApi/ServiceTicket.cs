@@ -49,7 +49,7 @@ namespace Service.WebApi
                     return ExpectedResultEnum.BusinessRuleException;
                 case "ConflictException":
                     return ExpectedResultEnum.ConflictException;
-                case "InputException":
+                case "ContractException":
                     return ExpectedResultEnum.InputException;
                 case "NotFoundException":
                     return ExpectedResultEnum.NotFoundException;

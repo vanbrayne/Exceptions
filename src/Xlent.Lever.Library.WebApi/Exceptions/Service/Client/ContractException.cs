@@ -1,17 +1,18 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Service;
 using Xlent.Lever.Library.Core.Exceptions.Service.Server;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Service.Client
+namespace Xlent.Lever.Library.WebApi.Exceptions.Service.Client
 {
     /// <summary>
     /// There was something wrong with the request itself, i.e. syntax, values out of range, etc.
     /// </summary>
-    public class InputException : ClientException
+    public class ContractException : ClientException
     {
         public const string ExceptionTypeId = "659f879a-299a-4c11-921f-466fde971c13";
-        public InputException() : this((string)null, null) { }
-        public InputException(string message) : this(message, null) { }
-        public InputException(string message, Exception innerException) : base(message, innerException)
+        public ContractException() : this((string)null, null) { }
+        public ContractException(string message) : this(message, null) { }
+        public ContractException(string message, Exception innerException) : base(message, innerException)
         {
             SetProperties();
         }

@@ -7,6 +7,7 @@ using Xlent.Lever.Library.Core.Exceptions;
 using Xlent.Lever.Library.Core.Exceptions.Service;
 using Xlent.Lever.Library.Core.Exceptions.Service.Client;
 using Xlent.Lever.Library.Core.Exceptions.Service.Server;
+using Xlent.Lever.Library.WebApi.Exceptions.Service.Client;
 using NotImplementedException = Xlent.Lever.Library.Core.Exceptions.Service.Server.NotImplementedException;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
@@ -49,55 +50,52 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             return fulcrumException;
         }
 
-        public static FulcrumException ToFulcrumException(FulcrumError fulcrumError)
+        public static FulcrumException ToFulcrumException(FulcrumError error)
         {
-            if (fulcrumError == null) return null;
-            FulcrumException fulcrumException;
-            switch (fulcrumError.TypeId)
+            if (error == null) return null;
+            FulcrumException exception;
+            switch (error.TypeId)
             {
                 case BusinessRuleException.ExceptionTypeId:
-                    fulcrumException = new BusinessRuleException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new BusinessRuleException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case ConflictException.ExceptionTypeId:
-                    fulcrumException = new ConflictException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new ConflictException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
-                case InputException.ExceptionTypeId:
-                    fulcrumException = new InputException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                case ContractException.ExceptionTypeId:
+                    exception = new ContractException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case NotFoundException.ExceptionTypeId:
-                    fulcrumException = new NotFoundException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new NotFoundException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case UnauthorizedException.ExceptionTypeId:
-                    fulcrumException = new UnauthorizedException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new UnauthorizedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case AssertionFailedException.ExceptionTypeId:
-                    fulcrumException = new AssertionFailedException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new AssertionFailedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case NotImplementedException.ExceptionTypeId:
-                    fulcrumException = new NotImplementedException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new NotImplementedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 case TryAgainException.ExceptionTypeId:
-                    fulcrumException = new TryAgainException(fulcrumError.TechnicalMessage, ToFulcrumException(fulcrumError.InnerError));
+                    exception = new TryAgainException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
                     break;
                 default:
-                    fulcrumException = null;
+                    exception = null;
                     break;
 
             }
-            if (fulcrumException == null)
+            if (exception == null)
             {
-                var message = $"The TypeId ({fulcrumError.TypeId}) was not recognized: {fulcrumError.ToJsonString(Formatting.Indented)}";
-                return new AssertionFailedException(message, ToFulcrumException(fulcrumError.InnerError));
+                var message = $"The TypeId ({error.TypeId}) was not recognized: {error.ToJsonString(Formatting.Indented)}";
+                return new AssertionFailedException(message, ToFulcrumException(error.InnerError));
             }
-            fulcrumException.CopyFrom(fulcrumError);
-            return fulcrumException;
+            exception.CopyFrom(error);
+            return exception;
         }
 
         public static HttpResponseMessage ToHttpResponseMessage(Exception e, bool mustMatchCoreExceptions = false)
         {
-            var fulcrumException = e as FulcrumException;
-            
-
             var error = ToFulcrumError(e);
             if (error == null)
             {
@@ -131,12 +129,27 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             return error;
         }
 
-        private static HttpStatusCode? ToHttpStatusCode(IFulcrumError fulcrumError)
+        private static void ValidateStatusCode(HttpStatusCode statusCode, FulcrumError error)
         {
-            switch (fulcrumError.TypeId)
+            var expectedStatusCode = ToHttpStatusCode(error);
+            if (expectedStatusCode == null)
+            {
+                throw new AssertionFailedException(
+                    $"The TypeId of the content could not be converted to an HTTP status code: {error.ToJsonString(Formatting.Indented)}.");
+            }
+            if (expectedStatusCode != statusCode)
+            {
+                throw new AssertionFailedException(
+                    $"The HTTP error response had status code {statusCode}, but was expected to have {expectedStatusCode.Value}, due to the TypeId in the content: \"{error.ToJsonString(Formatting.Indented)}");
+            }
+        }
+
+        private static HttpStatusCode? ToHttpStatusCode(IFulcrumError error)
+        {
+            switch (error.TypeId)
             {
                 case BusinessRuleException.ExceptionTypeId:
-                case InputException.ExceptionTypeId:
+                case ContractException.ExceptionTypeId:
                 case NotFoundException.ExceptionTypeId:
                     return HttpStatusCode.BadRequest;
                 case ConflictException.ExceptionTypeId:
@@ -151,21 +164,6 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
                     return HttpStatusCode.ServiceUnavailable;
                 default:
                     return null;
-            }
-        }
-
-        private static void ValidateStatusCode(HttpStatusCode statusCode, FulcrumError fulcrumError)
-        {
-            var expectedStatusCode = ToHttpStatusCode(fulcrumError);
-            if (expectedStatusCode == null)
-            {
-                throw new AssertionFailedException(
-                    $"The TypeId of the content could not be converted to an HTTP status code: {fulcrumError.ToJsonString(Formatting.Indented)}.");
-            }
-            if (expectedStatusCode != statusCode)
-            {
-                throw new AssertionFailedException(
-                    $"The HTTP error response had status code {statusCode}, but was expected to have {expectedStatusCode.Value}, due to the TypeId in the content: \"{fulcrumError.ToJsonString(Formatting.Indented)}");
             }
         }
     }

@@ -9,6 +9,7 @@ using Xlent.Lever.Library.Core.Exceptions.Service;
 using Xlent.Lever.Library.Core.Exceptions.Service.Client;
 using Xlent.Lever.Library.Core.Exceptions.Service.Server;
 using Xlent.Lever.Library.WebApi.Exceptions;
+using Xlent.Lever.Library.WebApi.Exceptions.Service.Client;
 
 namespace Facade
 {
@@ -51,7 +52,7 @@ namespace Facade
                     fulcrumException = new ConflictException("Conflict exception");
                     break;
                 case ExpectedResultEnum.InputException:
-                    fulcrumException = new InputException("Input exception");
+                    fulcrumException = new ContractException("Input exception");
                     break;
                 case ExpectedResultEnum.NotFoundException:
                     fulcrumException = new NotFoundException("Not found exception");
