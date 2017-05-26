@@ -8,12 +8,12 @@ namespace Bll.Interfaces
         Ok,
         BusinessRuleException,
         ConflictException,
-        InputException,
+        ContractException,
         NotFoundException,
         UnauthorizedException,
         AssertionFailedException,
         NotImplementedException,
-        UnavailableException
+        TryAgainException
     }
 
     public interface IDalTicketClient

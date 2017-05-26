@@ -21,6 +21,14 @@ namespace Xlent.Lever.Library.Core.Exceptions.Service.Server
         public override bool IsRetryMeaningful => false;
         public override string TypeId => ExceptionTypeId;
 
+        public override FulcrumException FromServerToClient(string serverTechnicalName)
+        {
+            ServerTechnicalName = serverTechnicalName;
+            var e = new AssertionFailedException(
+                $"Did not expect {ServerTechnicalName ?? "server"} to return the following error: {Message}", this);
+            return e;
+        }
+
         private void SetProperties()
         {
             // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId

@@ -75,17 +75,23 @@ namespace Service.WebApi.Test
         [TestMethod]
         public async Task AssertionFailedException()
         {
-            await VerifyException<AssertionFailedException, AssertionFailedException>();
+            await VerifyException<AssertionFailedException, AssertionFailedException>(true);
         }
 
         [TestMethod]
         public async Task NotImplementedException()
         {
-            await VerifyException<NotImplementedException, NotImplementedException>();
+            await VerifyException<NotImplementedException, AssertionFailedException>();
+        }
+
+        [TestMethod]
+        public async Task TryAgainException()
+        {
+            await VerifyException<TryAgainException, TryAgainException>();
         }
         #endregion
 
-        private async Task VerifyException<TFacadeException, TBllException>()
+        private async Task VerifyException<TFacadeException, TBllException>(bool expectCopy = false)
             where TFacadeException : FulcrumException
             where TBllException : FulcrumException, new()
         {
@@ -95,7 +101,7 @@ namespace Service.WebApi.Test
             var error = FulcrumError.Parse(content);
             Assert.IsNotNull(error, $"Expected a JSON formatted error. (Content was \"{content}\".");
             ValidateExceptionType<TBllException>(error);
-            if (typeof(TFacadeException) == typeof(TBllException))
+            if (typeof(TFacadeException) == typeof(TBllException) && !expectCopy)
             {
                 // The following condition has been specially prepared for in the mock service.
                 // This would never happen in real life.

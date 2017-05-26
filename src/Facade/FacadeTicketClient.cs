@@ -51,8 +51,8 @@ namespace Facade
                 case ExpectedResultEnum.ConflictException:
                     fulcrumException = new ConflictException("Conflict exception");
                     break;
-                case ExpectedResultEnum.InputException:
-                    fulcrumException = new ContractException("Input exception");
+                case ExpectedResultEnum.ContractException:
+                    fulcrumException = new ContractException("Contract exception");
                     break;
                 case ExpectedResultEnum.NotFoundException:
                     fulcrumException = new NotFoundException("Not found exception");
@@ -65,6 +65,9 @@ namespace Facade
                     break;
                 case ExpectedResultEnum.NotImplementedException:
                     fulcrumException = new NotImplementedException("Not implemented exception");
+                    break;
+                case ExpectedResultEnum.TryAgainException:
+                    fulcrumException = new TryAgainException("Try again exception");
                     break;
                 default:
                     fulcrumException = new AssertionFailedException($"Unexpected switch value: {expectedFacadeResult}");

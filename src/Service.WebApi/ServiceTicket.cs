@@ -50,7 +50,7 @@ namespace Service.WebApi
                 case "ConflictException":
                     return ExpectedResultEnum.ConflictException;
                 case "ContractException":
-                    return ExpectedResultEnum.InputException;
+                    return ExpectedResultEnum.ContractException;
                 case "NotFoundException":
                     return ExpectedResultEnum.NotFoundException;
                 case "UnauthorizedException":
@@ -59,8 +59,8 @@ namespace Service.WebApi
                     return ExpectedResultEnum.AssertionFailedException;
                 case "NotImplementedException":
                     return ExpectedResultEnum.NotImplementedException;
-                case "UnavailableException":
-                    return ExpectedResultEnum.UnavailableException;
+                case "TryAgainException":
+                    return ExpectedResultEnum.TryAgainException;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(expectedFacadeResult));
             }
