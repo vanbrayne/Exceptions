@@ -108,7 +108,7 @@ namespace Service.WebApi.Test
         #endregion
 
         private async Task VerifyException<TFacadeException, TBllException>(bool expectCopy = false)
-            where TFacadeException : FulcrumException
+            where TFacadeException : IFulcrumException
             where TBllException : FulcrumException, new()
         {
             var response = await _ticketService.GetTicketAsync(TicketId, typeof(TFacadeException).Name);

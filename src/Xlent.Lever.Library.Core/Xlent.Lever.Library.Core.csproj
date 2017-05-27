@@ -41,16 +41,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\Assert.cs" />
-    <Compile Include="Exceptions\BllContract.cs" />
+    <Compile Include="BllContract.cs" />
     <Compile Include="Exceptions\Client\ContractException.cs" />
-    <Compile Include="Exceptions\ContractSupport.cs" />
+    <Compile Include="ContractSupport.cs" />
     <Compile Include="Exceptions\IFulcrumError.cs" />
-    <Compile Include="Exceptions\Client\ClientException.cs" />
+    <Compile Include="Exceptions\Client\IClientException.cs" />
     <Compile Include="Exceptions\Client\BusinessRuleException.cs" />
     <Compile Include="Exceptions\Client\ConflictException.cs" />
     <Compile Include="Exceptions\Client\NotFoundException.cs" />
     <Compile Include="Exceptions\FulcrumException.cs" />
-    <Compile Include="Exceptions\Server\ServerException.cs" />
+    <Compile Include="Exceptions\IFulcrumException.cs" />
+    <Compile Include="Exceptions\Server\IServerException.cs" />
     <Compile Include="Exceptions\Server\AssertionFailedException.cs" />
     <Compile Include="Exceptions\Server\NotImplementedException.cs" />
     <Compile Include="Exceptions\Server\TryAgainException.cs" />

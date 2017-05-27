@@ -11,7 +11,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Server
     /// <remarks>
     /// This is basically a "Programmers Error", a bug on the server side.
     /// </remarks>
-    public class AssertionFailedException : ServerException
+    public class AssertionFailedException : FulcrumException, IServerException
     {
         public const string ExceptionTypeId = "f736f9dd-db95-427e-a231-48e9361af921";
         public AssertionFailedException() : this((string)null, null) { }

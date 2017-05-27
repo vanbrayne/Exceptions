@@ -7,7 +7,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions.Client
     /// <summary>
     /// Authorization was missing or not accepted.
     /// </summary>
-    public class UnauthorizedException : ClientException
+    public class UnauthorizedException : FulcrumException, IClientException
     {
         public const string ExceptionTypeId = "8f4c4dde-7faf-43e8-9f7b-36ff9a24e56d";
         public UnauthorizedException() : this((string)null, null) { }

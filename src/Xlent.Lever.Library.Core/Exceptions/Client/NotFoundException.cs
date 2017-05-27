@@ -12,7 +12,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Client
     /// If a person exists, and the request is for a list of e-mail addresses and the person doesn't have any, 
     /// you should not throw this exception, but return an empty list.
     /// </example>
-    public class NotFoundException : ClientException
+    public class NotFoundException : FulcrumException, IClientException
     {
         public const string ExceptionTypeId = "8108ca0d-14a3-4732-8b58-eb4151fb222d";
         public NotFoundException() : this((string)null, null) { }
