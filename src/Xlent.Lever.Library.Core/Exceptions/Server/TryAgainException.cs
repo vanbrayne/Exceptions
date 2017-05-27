@@ -5,7 +5,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Server
     /// <summary>
     /// The resource was temporarily locked, please try again in the recommended time span (<see cref="FulcrumException.RecommendedWaitTimeInSeconds"/>).
     /// </summary>
-    public class TryAgainException : ServerException
+    public class TryAgainException : FulcrumException, IServerException
     {
         public const string ExceptionTypeId = "5350b10d-0ac5-4802-aa9b-a9016c7bf636";
         public TimeSpan RetryAfterTimeSpan { get; set; }

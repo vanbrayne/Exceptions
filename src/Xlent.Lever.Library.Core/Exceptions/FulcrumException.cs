@@ -5,7 +5,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// <summary>
     /// The base class for all Fulcrum exceptions
     /// </summary>
-    public abstract class FulcrumException : Exception, IFulcrumError
+    public abstract class FulcrumException : Exception, IFulcrumException
     {
         /// <summary>
         /// The current servent name. Can be set by calling <see cref="Initialize"/>.

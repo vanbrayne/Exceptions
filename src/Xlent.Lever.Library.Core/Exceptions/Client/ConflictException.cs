@@ -11,7 +11,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Client
     /// <example>
     /// Someone else has already created the resource (The Create or Insert scenario with duplicates).
     /// </example>
-    public class ConflictException : ClientException
+    public class ConflictException : FulcrumException, IClientException
     {
         public const string ExceptionTypeId = "8ca23bea-e1f9-4c35-a181-e16738122a75";
         public ConflictException() : this((string)null, null) { }

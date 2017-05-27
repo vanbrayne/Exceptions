@@ -11,7 +11,7 @@ namespace Xlent.Lever.Library.Core.Exceptions.Client
     /// <example>
     /// Someone else has already created the resource (The Create or Insert scenario with duplicates).
     /// </example>
-    public class BusinessRuleException : ClientException
+    public class BusinessRuleException : FulcrumException, IClientException
     {
         public const string ExceptionTypeId = "f4ebb36f-1c1c-4f9e-bc4d-9b1d3e000823";
         public BusinessRuleException() : this((string) null, null) { }

@@ -7,7 +7,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions.Client
     /// <summary>
     /// There was something wrong with the request itself, i.e. syntax, values out of range, etc.
     /// </summary>
-    public class ServerContractException : ClientException
+    public class ServerContractException : FulcrumException, IClientException
     {
         public const string ExceptionTypeId = "659f879a-299a-4c11-921f-466fde971c13";
         public ServerContractException() : this((string)null, null) { }
