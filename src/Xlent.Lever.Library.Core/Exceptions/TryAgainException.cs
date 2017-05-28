@@ -8,6 +8,10 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// </summary>
     public class TryAgainException : FulcrumException, IServerException
     {
+        public static TryAgainException Create(string message, Exception innerException)
+        {
+            return new TryAgainException(message, innerException);
+        }
         public const string ExceptionTypeId = "5350b10d-0ac5-4802-aa9b-a9016c7bf636";
         public TimeSpan RetryAfterTimeSpan { get; set; }
         public TryAgainException() : this((string)null, null) { }

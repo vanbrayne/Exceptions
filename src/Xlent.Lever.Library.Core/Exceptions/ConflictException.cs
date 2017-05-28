@@ -14,6 +14,10 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// </example>
     public class ConflictException : FulcrumException, IClientException
     {
+        public static ConflictException Create(string message, Exception innerException)
+        {
+            return new ConflictException(message, innerException);
+        }
         public const string ExceptionTypeId = "8ca23bea-e1f9-4c35-a181-e16738122a75";
         public ConflictException() : this((string)null, null) { }
         public ConflictException(string message) : this(message, null)

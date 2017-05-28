@@ -47,6 +47,7 @@
     <Compile Include="Exceptions\FulcrumError.cs" />
     <Compile Include="Exceptions\Converter.cs" />
     <Compile Include="Exceptions\ServerContractException.cs" />
+    <Compile Include="Exceptions\ForbiddenAccessException.cs" />
     <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
