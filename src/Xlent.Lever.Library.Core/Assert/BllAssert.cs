@@ -1,8 +1,8 @@
-﻿using Xlent.Lever.Library.Core.Exceptions.Server;
+﻿using Xlent.Lever.Library.Core.Exceptions;
 
-namespace Xlent.Lever.Library.Core.Exceptions
+namespace Xlent.Lever.Library.Core.Assert
 {
-    public static class Assert
+    public static class BllAssert
     {
         public static void IsTrue(bool value, string message)
         {

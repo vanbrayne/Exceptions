@@ -1,8 +1,8 @@
 ﻿using System;
 using Xlent.Lever.Library.Core.Exceptions;
-using Xlent.Lever.Library.Core.Exceptions.Client;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
-namespace Xlent.Lever.Library.WebApi.Exceptions.Client
+namespace Xlent.Lever.Library.WebApi.Exceptions
 {
     /// <summary>
     /// Authorization was missing or not accepted.

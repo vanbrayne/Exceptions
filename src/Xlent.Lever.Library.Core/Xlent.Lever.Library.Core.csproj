@@ -40,21 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\Assert.cs" />
-    <Compile Include="BllContract.cs" />
-    <Compile Include="Exceptions\Client\ContractException.cs" />
+    <Compile Include="Assert\BllAssert.cs" />
+    <Compile Include="Assert\BllContract.cs" />
+    <Compile Include="Exceptions\ContractException.cs" />
     <Compile Include="ContractSupport.cs" />
-    <Compile Include="Exceptions\IFulcrumError.cs" />
-    <Compile Include="Exceptions\Client\IClientException.cs" />
-    <Compile Include="Exceptions\Client\BusinessRuleException.cs" />
-    <Compile Include="Exceptions\Client\ConflictException.cs" />
-    <Compile Include="Exceptions\Client\NotFoundException.cs" />
+    <Compile Include="Exceptions\Interfaces\IFulcrumError.cs" />
+    <Compile Include="Exceptions\Interfaces\IClientException.cs" />
+    <Compile Include="Exceptions\BusinessRuleException.cs" />
+    <Compile Include="Exceptions\ConflictException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\FulcrumException.cs" />
-    <Compile Include="Exceptions\IFulcrumException.cs" />
-    <Compile Include="Exceptions\Server\IServerException.cs" />
-    <Compile Include="Exceptions\Server\AssertionFailedException.cs" />
-    <Compile Include="Exceptions\Server\NotImplementedException.cs" />
-    <Compile Include="Exceptions\Server\TryAgainException.cs" />
+    <Compile Include="Exceptions\Interfaces\IFulcrumException.cs" />
+    <Compile Include="Exceptions\Interfaces\IServerException.cs" />
+    <Compile Include="Exceptions\AssertionFailedException.cs" />
+    <Compile Include="Exceptions\NotImplementedException.cs" />
+    <Compile Include="Exceptions\TryAgainException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\ServerContract.cs" />
+    <Compile Include="Assert\ServerContract.cs" />
     <Compile Include="Exceptions\FulcrumError.cs" />
     <Compile Include="Exceptions\Converter.cs" />
-    <Compile Include="Exceptions\Client\ServerContractException.cs" />
-    <Compile Include="Exceptions\Client\UnauthorizedException.cs" />
+    <Compile Include="Exceptions\ServerContractException.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

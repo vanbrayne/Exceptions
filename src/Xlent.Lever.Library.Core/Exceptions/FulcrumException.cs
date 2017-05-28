@@ -1,4 +1,5 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
 namespace Xlent.Lever.Library.Core.Exceptions
 {

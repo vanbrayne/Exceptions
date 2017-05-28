@@ -1,6 +1,7 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Server
+namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// The request requires some functionality that deliberately has been left out, at least for the moment.

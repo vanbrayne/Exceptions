@@ -1,6 +1,7 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Client
+namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// The request conflicted with the current state of the resource.

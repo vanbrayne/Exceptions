@@ -4,10 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xlent.Lever.Library.Core.Exceptions;
-using Xlent.Lever.Library.Core.Exceptions.Client;
-using Xlent.Lever.Library.Core.Exceptions.Server;
-using Xlent.Lever.Library.WebApi.Exceptions.Client;
-using NotImplementedException = Xlent.Lever.Library.Core.Exceptions.Server.NotImplementedException;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
+using NotImplementedException = Xlent.Lever.Library.Core.Exceptions.NotImplementedException;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
 {

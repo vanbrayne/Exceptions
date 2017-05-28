@@ -1,4 +1,4 @@
-﻿namespace Xlent.Lever.Library.Core.Exceptions
+﻿namespace Xlent.Lever.Library.Core.Exceptions.Interfaces
 {
     public interface IFulcrumError
     {

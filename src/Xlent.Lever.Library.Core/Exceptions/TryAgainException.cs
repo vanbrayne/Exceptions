@@ -1,6 +1,7 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Server
+namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// The resource was temporarily locked, please try again in the recommended time span (<see cref="FulcrumException.RecommendedWaitTimeInSeconds"/>).

@@ -1,6 +1,7 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Client
+namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// There was something wrong with the request itself, i.e. syntax, values out of range, etc.

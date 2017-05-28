@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Xlent.Lever.Library.Core.Exceptions;
-using Xlent.Lever.Library.Core.Exceptions.Client;
-using Xlent.Lever.Library.WebApi.Exceptions.Client;
 
-namespace Xlent.Lever.Library.WebApi.Exceptions
+namespace Xlent.Lever.Library.Core.Assert
 {
-    public static class ServerContract
+    public static class BllContract
     {
         public static void Require<TParameter>(string parameterName, TParameter parameterValue,
             Expression<Func<TParameter, bool>> requirementExpression)
@@ -36,7 +34,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
         private static void MaybeThrowException(string message)
         {
             if (message == null) return;
-            throw new ServerContractException(message);
+            throw new ContractException(message);
         }
     }
 }

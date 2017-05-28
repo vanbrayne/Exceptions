@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xlent.Lever.Library.Core.Exceptions.Client;
 
-namespace Xlent.Lever.Library.Core.Exceptions
+namespace Xlent.Lever.Library.Core
 {
     public static class ContractSupport
     {

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Xlent.Lever.Library.Core.Exceptions.Client;
+using Xlent.Lever.Library.Core;
+using Xlent.Lever.Library.WebApi.Exceptions;
 
-namespace Xlent.Lever.Library.Core.Exceptions
+namespace Xlent.Lever.Library.WebApi.Assert
 {
-    public static class BllContract
+    public static class ServerContract
     {
         public static void Require<TParameter>(string parameterName, TParameter parameterValue,
             Expression<Func<TParameter, bool>> requirementExpression)
@@ -38,7 +35,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         private static void MaybeThrowException(string message)
         {
             if (message == null) return;
-            throw new ContractException(message);
+            throw new ServerContractException(message);
         }
     }
 }

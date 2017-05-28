@@ -1,6 +1,7 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
-namespace Xlent.Lever.Library.Core.Exceptions.Server
+namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
     /// The server failed to execute the request due to an assertion made by the programmer that proved to be wrong.

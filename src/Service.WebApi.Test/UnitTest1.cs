@@ -4,10 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Service.WebApi.Contract;
 using Xlent.Lever.Library.Core.Exceptions;
-using Xlent.Lever.Library.Core.Exceptions.Client;
-using Xlent.Lever.Library.Core.Exceptions.Server;
+using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 using Xlent.Lever.Library.WebApi.Exceptions;
-using Xlent.Lever.Library.WebApi.Exceptions.Client;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace Service.WebApi.Test
