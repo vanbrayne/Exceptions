@@ -15,6 +15,10 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// </example>
     public class NotFoundException : FulcrumException, IClientException
     {
+        public static NotFoundException Create(string message, Exception innerException)
+        {
+            return new NotFoundException(message, innerException);
+        }
         public const string ExceptionTypeId = "8108ca0d-14a3-4732-8b58-eb4151fb222d";
         public NotFoundException() : this((string)null, null) { }
         public NotFoundException(string message) : this(message, null) { }

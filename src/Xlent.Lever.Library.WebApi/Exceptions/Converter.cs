@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,9 +10,6 @@ using NotImplementedException = Xlent.Lever.Library.Core.Exceptions.NotImplement
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
 {
-
-    // TODO: Handle nested exceptions
-
     /// <summary>
     /// This class has conversion methods for converting between unsuccessful HTTP responses and Fulcrum exceptions.
     /// Fulcrum is only using four HTTP status codes for errors; 400, 401, 500 and 503.
@@ -19,6 +17,12 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
     /// </summary>
     public class Converter
     {
+        private static Dictionary<string, Func<IFulcrumException, string, IFulcrumException>> FulcrumExceptionCreateCache = new Dictionary<string, Func<IFulcrumException, string, IFulcrumException>>();
+
+        public static void AddFulcrumException(Type fulcrumExceptionType)
+        {
+            
+        }
         public static async Task<FulcrumException> ToFulcrumExceptionAsync(HttpResponseMessage response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));

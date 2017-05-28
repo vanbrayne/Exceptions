@@ -14,6 +14,11 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// </remarks>
     public class AssertionFailedException : FulcrumException, IServerException
     {
+        public static AssertionFailedException Create(string message, Exception innerException)
+        {
+            return new AssertionFailedException(message, innerException);
+        }
+
         public const string ExceptionTypeId = "f736f9dd-db95-427e-a231-48e9361af921";
         public AssertionFailedException() : this((string)null, null) { }
         public AssertionFailedException(string message) : this(message, null) { }

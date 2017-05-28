@@ -9,6 +9,10 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
     /// </summary>
     public class UnauthorizedException : FulcrumException, IClientException
     {
+        public static UnauthorizedException Create(string message, Exception innerException)
+        {
+            return new UnauthorizedException(message, innerException);
+        }
         public const string ExceptionTypeId = "8f4c4dde-7faf-43e8-9f7b-36ff9a24e56d";
         public UnauthorizedException() : this((string)null, null) { }
         public UnauthorizedException(string message) : this(message, null) { }
