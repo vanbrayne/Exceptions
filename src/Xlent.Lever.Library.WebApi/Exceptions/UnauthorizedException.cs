@@ -26,7 +26,10 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            FriendlyMessage =
+                "Authorization was missing or not accepted.";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#UnauthorizedException";
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
             return new BusinessRuleException(message, innerException);
         }
         public const string ExceptionTypeId = "f4ebb36f-1c1c-4f9e-bc4d-9b1d3e000823";
-        public BusinessRuleException() : this((string) null, null) { }
+        public BusinessRuleException() : this((string)null, null) { }
         public BusinessRuleException(string message) : this(message, null) { }
 
         public BusinessRuleException(string message, Exception innerException) : base(message, innerException)
@@ -26,7 +26,10 @@ namespace Xlent.Lever.Library.Core.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            FriendlyMessage =
+                "The request conflicted with a business rules. Please make changes accordingly and try again.";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#BusinessRuleException";
         }
     }
 }

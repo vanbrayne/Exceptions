@@ -27,7 +27,11 @@ namespace Xlent.Lever.Library.Core.Exceptions
         private void SetProperties()
         {
             if (RecommendedWaitTimeInSeconds <= 0.0) RecommendedWaitTimeInSeconds = 2;
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+
+            FriendlyMessage =
+                "The request conflicted with a business rules. Please make changes accordingly and try again.";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#TryAgainException";
         }
     }
 }

@@ -34,7 +34,10 @@ namespace Xlent.Lever.Library.Core.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            FriendlyMessage =
+                "The request conflicted with a request made by someone else. Please reload your data and make a new request.";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#ConflictException";
         }
     }
 }

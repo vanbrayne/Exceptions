@@ -25,7 +25,6 @@ namespace Xlent.Lever.Library.Core.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
         }
     }
 }

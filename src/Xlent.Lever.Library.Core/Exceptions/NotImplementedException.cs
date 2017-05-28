@@ -28,7 +28,13 @@ namespace Xlent.Lever.Library.Core.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            FriendlyMessage =
+                "The request requires some functionality that deliberately has been left out, at least for the moment.";
+            FriendlyMessage += "Please report the following:";
+            FriendlyMessage += $"\rCorrelactionId: {CorrelationId}";
+            FriendlyMessage += $"\rInstanceId: {InstanceId}";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#NotImplementedException";
         }
     }
 }

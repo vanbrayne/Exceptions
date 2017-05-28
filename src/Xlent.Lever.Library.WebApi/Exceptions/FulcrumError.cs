@@ -108,7 +108,6 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             Code = fulcrumError.Code;
             TypeId = fulcrumError.TypeId;
             CorrelationId = fulcrumError.CorrelationId;
-            FriendlyMessageId = fulcrumError.FriendlyMessageId;
         }
 
         public string ToJsonString(Formatting formatting)

@@ -71,11 +71,5 @@
         /// exactly what happened.
         /// </summary>
         string CorrelationId { get; }
-
-        /// <summary>
-        /// An optional unique id for the format string for the <see cref="FriendlyMessage"/>. The intentation is that
-        /// it can be used for translating the message. Recommended to be a constant GUID.
-        /// </summary>
-        string FriendlyMessageId { get; }
     }
 }

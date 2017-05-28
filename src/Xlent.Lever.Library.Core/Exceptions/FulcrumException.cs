@@ -1,4 +1,5 @@
 ﻿using System;
+using Xlent.Lever.Library.Core.Assert;
 using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
 namespace Xlent.Lever.Library.Core.Exceptions
@@ -88,12 +89,6 @@ namespace Xlent.Lever.Library.Core.Exceptions
         /// </summary>
         public string CorrelationId { get; set; }
 
-        /// <summary>
-        /// An optional unique id for the format string for the <see cref="FriendlyMessage"/>. The intentation is that
-        /// it can be used for translating the message. Recommended to be a constant GUID.
-        /// </summary>
-        public string FriendlyMessageId { get; set; }
-
 
 
         protected FulcrumException() : this((string)null, null) { }
@@ -112,7 +107,6 @@ namespace Xlent.Lever.Library.Core.Exceptions
             RecommendedWaitTimeInSeconds = error.RecommendedWaitTimeInSeconds;
             InstanceId = error.InstanceId;
             CorrelationId = error.CorrelationId;
-            FriendlyMessageId = error.FriendlyMessageId;
         }
 
         public void CopyFrom(IFulcrumError fulcrumError)
@@ -127,14 +121,13 @@ namespace Xlent.Lever.Library.Core.Exceptions
             Code = fulcrumError.Code;
             TypeId = fulcrumError.TypeId;
             CorrelationId = fulcrumError.CorrelationId;
-            FriendlyMessageId = fulcrumError.FriendlyMessageId;
         }
 
         public static void Initialize(string serverTechnicalName)
         {
-            if (serverTechnicalName == null) throw new ArgumentNullException(nameof(serverTechnicalName));
+            BllContract.RequireNotNullOrWhitespace(nameof(serverTechnicalName), serverTechnicalName);
             serverTechnicalName = serverTechnicalName.ToLower();
-            if (_serverTechnicalName != null && _serverTechnicalName != serverTechnicalName) throw new ApplicationException("Once the server name has been set, it can't be changed.");
+            BllContract.Require(_serverTechnicalName == null || _serverTechnicalName != serverTechnicalName, "Once the server name has been set, it can't be changed.");
             _serverTechnicalName = serverTechnicalName;
         }
     }

@@ -32,7 +32,13 @@ namespace Xlent.Lever.Library.Core.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+
+            FriendlyMessage =
+                    "An assertion made by the programmer proved to be wrong and the request couldn't be properly fulfilled. Please report the following:";
+            FriendlyMessage += $"\rCorrelactionId: {CorrelationId}";
+            FriendlyMessage += $"\rInstanceId: {InstanceId}";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#AssertFailedException";
         }
     }
 }

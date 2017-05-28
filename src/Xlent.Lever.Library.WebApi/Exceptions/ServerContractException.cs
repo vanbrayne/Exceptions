@@ -26,7 +26,10 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            FriendlyMessage =
+                "The request contained data that was syntactically wrong, had values out of range, or something similar.";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#ServerContractException";
         }
     }
 }
