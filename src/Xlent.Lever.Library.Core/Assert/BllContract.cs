@@ -9,32 +9,27 @@ namespace Xlent.Lever.Library.Core.Assert
         public static void Require<TParameter>(string parameterName, TParameter parameterValue,
             Expression<Func<TParameter, bool>> requirementExpression)
         {
-            var message = ContractSupport.GetErrorMessageIfFalse(parameterName, parameterValue, requirementExpression);
-            MaybeThrowException(message);
+            GenericContract<ContractException>.Require(parameterName, parameterValue, requirementExpression);
         }
 
         public static void RequireNotNull<TParameter>(string parameterName, TParameter parameterValue)
         {
-            var message = ContractSupport.GetErrorMessageIfNull(parameterName, parameterValue);
-            MaybeThrowException(message);
+            GenericContract<ContractException>.RequireNotNull(parameterName, parameterValue);
         }
 
         public static void RequireNotNullOrWhitespace(string parameterName, string parameterValue)
         {
-            var message = ContractSupport.GetErrorMessageIfNullOrWhitespace(parameterName, parameterValue);
-            MaybeThrowException(message);
+            GenericContract<ContractException>.RequireNotNullOrWhitespace(parameterName, parameterValue);
         }
 
         public static void Require(Expression<Func<bool>> requirementExpression)
         {
-            var message = ContractSupport.GetErrorMessageIfFalse(requirementExpression);
-            MaybeThrowException(message);
+            GenericContract<ContractException>.Require(requirementExpression);
         }
 
-        private static void MaybeThrowException(string message)
+        public static void Require(bool mustBeTrue, string message)
         {
-            if (message == null) return;
-            throw new ContractException(message);
+            GenericContract<ContractException>.Require(mustBeTrue, message);
         }
     }
 }

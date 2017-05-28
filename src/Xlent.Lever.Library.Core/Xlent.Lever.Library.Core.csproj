@@ -41,9 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assert\BllAssert.cs" />
+    <Compile Include="Assert\GenericContract.cs" />
     <Compile Include="Assert\BllContract.cs" />
     <Compile Include="Exceptions\ContractException.cs" />
-    <Compile Include="ContractSupport.cs" />
     <Compile Include="Exceptions\Interfaces\IFulcrumError.cs" />
     <Compile Include="Exceptions\Interfaces\IClientException.cs" />
     <Compile Include="Exceptions\BusinessRuleException.cs" />

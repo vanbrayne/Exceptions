@@ -1,7 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xlent.Lever.Library.Core.Exceptions;
 using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 
 namespace Xlent.Lever.Library.WebApi.Exceptions
