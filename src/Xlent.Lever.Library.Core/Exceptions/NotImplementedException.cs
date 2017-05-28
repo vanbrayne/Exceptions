@@ -11,9 +11,9 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// </example>
     public class NotImplementedException : FulcrumException, IServerException
     {
-        public static AssertionFailedException Create(string message, Exception innerException)
+        public static NotImplementedException Create(string message, Exception innerException)
         {
-            return new AssertionFailedException(message, innerException);
+            return new NotImplementedException(message, innerException);
         }
         public const string ExceptionTypeId = "573f806f-56b9-48a0-86d9-15d3bf6c9c6c";
         public NotImplementedException() : this((string)null, null) { }

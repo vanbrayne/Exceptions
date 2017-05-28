@@ -8,11 +8,11 @@ namespace Xlent.Lever.Library.Core.Exceptions
     /// </summary>
     public class ContractException : FulcrumException, IClientException
     {
-        public static AssertionFailedException Create(string message, Exception innerException)
+        public static ContractException Create(string message, Exception innerException)
         {
-            return new AssertionFailedException(message, innerException);
+            return new ContractException(message, innerException);
         }
-        public const string ExceptionTypeId = "659f879a-299a-4c11-921f-466fde971c13";
+        public const string ExceptionTypeId = "e83dd5f2-e489-49bf-8991-799c953db2f6";
         public ContractException() : this((string)null, null) { }
         public ContractException(string message) : this(message, null) { }
         public ContractException(string message, Exception innerException) : base(message, innerException)

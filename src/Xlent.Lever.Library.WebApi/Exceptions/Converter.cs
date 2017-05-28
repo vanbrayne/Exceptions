@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xlent.Lever.Library.Core.Assert;
 using Xlent.Lever.Library.Core.Exceptions;
 using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 using NotImplementedException = Xlent.Lever.Library.Core.Exceptions.NotImplementedException;
@@ -17,12 +18,48 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
     /// </summary>
     public class Converter
     {
-        private static Dictionary<string, Func<IFulcrumException, string, IFulcrumException>> FulcrumExceptionCreateCache = new Dictionary<string, Func<IFulcrumException, string, IFulcrumException>>();
+        private static readonly Dictionary<string, Func<string, Exception, FulcrumException>> FactoryMethodsCache = new Dictionary<string, Func<string, Exception, FulcrumException>>();
+        private static readonly Dictionary<string, HttpStatusCode> HttpStatusCodesCache = new Dictionary<string, HttpStatusCode>();
 
-        public static void AddFulcrumException(Type fulcrumExceptionType)
+        public static void AddFulcrumException(Type fulcrumExceptionType, HttpStatusCode? statusCode = null)
         {
-            
+            var methodInfo = fulcrumExceptionType.GetMethod("Create");
+            Func<string, Exception, FulcrumException> createInstanceDelegate;
+            try
+            {
+                createInstanceDelegate =
+                    (Func<string, Exception, FulcrumException>)Delegate.CreateDelegate(
+                        typeof(Func<string, Exception, FulcrumException>), methodInfo);
+            }
+            catch (Exception e)
+            {
+                throw new ContractException(
+                    $"The type {fulcrumExceptionType.FullName} must have a factory method Create(string message, Exception innerException).",
+                    e);
+            }
+            // ReSharper disable once PossibleNullReferenceException
+            // ReSharper disable once RedundantCast
+            var exception = createInstanceDelegate("test", (Exception)null);
+            FactoryMethodsCache.Add(exception.TypeId, createInstanceDelegate);
+            if (statusCode != null) HttpStatusCodesCache.Add(exception.TypeId, statusCode.Value);
         }
+
+        static Converter()
+        {
+            // Core
+            AddFulcrumException(typeof(AssertionFailedException), HttpStatusCode.InternalServerError);
+            AddFulcrumException(typeof(BusinessRuleException), HttpStatusCode.BadRequest);
+            AddFulcrumException(typeof(ConflictException), HttpStatusCode.Conflict);
+            AddFulcrumException(typeof(ContractException));
+            AddFulcrumException(typeof(NotFoundException), HttpStatusCode.BadRequest);
+            AddFulcrumException(typeof(NotImplementedException), HttpStatusCode.InternalServerError);
+            AddFulcrumException(typeof(TryAgainException), HttpStatusCode.ServiceUnavailable);
+
+            // WebApi
+            AddFulcrumException(typeof(ServerContractException), HttpStatusCode.BadRequest);
+            AddFulcrumException(typeof(UnauthorizedException), HttpStatusCode.Unauthorized);
+        }
+
         public static async Task<FulcrumException> ToFulcrumExceptionAsync(HttpResponseMessage response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
@@ -50,45 +87,9 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
         public static FulcrumException ToFulcrumException(FulcrumError error)
         {
             if (error == null) return null;
-            FulcrumException exception;
-            switch (error.TypeId)
-            {
-                case BusinessRuleException.ExceptionTypeId:
-                    exception = new BusinessRuleException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case ConflictException.ExceptionTypeId:
-                    exception = new ConflictException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case ServerContractException.ExceptionTypeId:
-                    exception = new ServerContractException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case NotFoundException.ExceptionTypeId:
-                    exception = new NotFoundException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case UnauthorizedException.ExceptionTypeId:
-                    exception = new UnauthorizedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case AssertionFailedException.ExceptionTypeId:
-                    exception = new AssertionFailedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case NotImplementedException.ExceptionTypeId:
-                    exception = new NotImplementedException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                case TryAgainException.ExceptionTypeId:
-                    exception = new TryAgainException(error.TechnicalMessage, ToFulcrumException(error.InnerError));
-                    break;
-                default:
-                    exception = null;
-                    break;
-
-            }
-            if (exception == null)
-            {
-                var message = $"The TypeId ({error.TypeId}) was not recognized: {error.ToJsonString(Formatting.Indented)}";
-                return new AssertionFailedException(message, ToFulcrumException(error.InnerError));
-            }
-            exception.CopyFrom(error);
-            return exception;
+            var fulcrumException = CreateFulcrumException(error);
+            fulcrumException.CopyFrom(error);
+            return fulcrumException;
         }
 
         public static HttpResponseMessage ToHttpResponseMessage(Exception e, bool mustMatchCoreExceptions = false)
@@ -181,27 +182,23 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             }
         }
 
-        private static HttpStatusCode? ToHttpStatusCode(IFulcrumError error)
+        private static FulcrumException CreateFulcrumException(FulcrumError error, bool okIfNotExists = false)
         {
-            switch (error.TypeId)
+            if (!FactoryMethodsCache.ContainsKey(error.TypeId))
             {
-                case BusinessRuleException.ExceptionTypeId:
-                case ServerContractException.ExceptionTypeId:
-                case NotFoundException.ExceptionTypeId:
-                    return HttpStatusCode.BadRequest;
-                case ConflictException.ExceptionTypeId:
-                    return HttpStatusCode.Conflict;
-                case UnauthorizedException.ExceptionTypeId:
-                    return HttpStatusCode.Unauthorized;
-                case AssertionFailedException.ExceptionTypeId:
-                    return HttpStatusCode.InternalServerError;
-                case NotImplementedException.ExceptionTypeId:
-                    return HttpStatusCode.InternalServerError;
-                case TryAgainException.ExceptionTypeId:
-                    return HttpStatusCode.ServiceUnavailable;
-                default:
-                    return null;
+                if (okIfNotExists) return null;
+                var message = $"The TypeId ({error.TypeId}) was not recognized: {error.ToJsonString(Formatting.Indented)}. It must be added to {typeof(Converter).FullName}.";
+                return new AssertionFailedException(message, ToFulcrumException(error.InnerError));
             }
+            var factoryMethod = FactoryMethodsCache[error.TypeId];
+            var fulcrumException = factoryMethod(error.TechnicalMessage, ToFulcrumException(error.InnerError));
+            return fulcrumException;
+        }
+
+        private static HttpStatusCode? ToHttpStatusCode(FulcrumError error)
+        {
+            if (!HttpStatusCodesCache.ContainsKey(error.TypeId)) return null;
+            return HttpStatusCodesCache[error.TypeId];
         }
     }
 }
