@@ -74,6 +74,12 @@ namespace Service.WebApi.Test
         }
 
         [TestMethod]
+        public async Task ForbiddenAccessException()
+        {
+            await VerifyException<ForbiddenAccessException, AssertionFailedException>();
+        }
+
+        [TestMethod]
         public async Task ApiContractException()
         {
             var response = await _ticketService.GetTicketAsync(null, "IGNORE");
