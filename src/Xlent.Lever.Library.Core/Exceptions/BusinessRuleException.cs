@@ -4,14 +4,8 @@ using Xlent.Lever.Library.Core.Exceptions.Interfaces;
 namespace Xlent.Lever.Library.Core.Exceptions
 {
     /// <summary>
-    /// The request conflicted with the current state of the resource.
+    /// The request conflicted with a business rule.
     /// </summary>
-    /// <example>
-    /// Someone else has edited the resource (The Update with ETag scenario).
-    /// </example>
-    /// <example>
-    /// Someone else has already created the resource (The Create or Insert scenario with duplicates).
-    /// </example>
     public class BusinessRuleException : FulcrumException, IClientException
     {
         public static BusinessRuleException Create(string message, Exception innerException)

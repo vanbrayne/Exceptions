@@ -13,7 +13,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 {
     /// <summary>
     /// This class has conversion methods for converting between unsuccessful HTTP responses and Fulcrum exceptions.
-    /// Fulcrum is only using four HTTP status codes for errors; 400, 401, 500 and 503.
+    /// Fulcrum is only using three HTTP status codes for errors; 400, 500 and 503.
     /// This was based on the following blog article http://blog.restcase.com/rest-api-error-codes-101/
     /// </summary>
     public class Converter
@@ -49,7 +49,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             // Core
             AddFulcrumException(typeof(AssertionFailedException), HttpStatusCode.InternalServerError);
             AddFulcrumException(typeof(BusinessRuleException), HttpStatusCode.BadRequest);
-            AddFulcrumException(typeof(ConflictException), HttpStatusCode.Conflict);
+            AddFulcrumException(typeof(ConflictException), HttpStatusCode.BadRequest);
             AddFulcrumException(typeof(ContractException));
             AddFulcrumException(typeof(NotFoundException), HttpStatusCode.BadRequest);
             AddFulcrumException(typeof(NotImplementedException), HttpStatusCode.InternalServerError);
@@ -57,7 +57,8 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 
             // WebApi
             AddFulcrumException(typeof(ServerContractException), HttpStatusCode.BadRequest);
-            AddFulcrumException(typeof(UnauthorizedException), HttpStatusCode.Unauthorized);
+            AddFulcrumException(typeof(UnauthorizedException), HttpStatusCode.BadRequest);
+            AddFulcrumException(typeof(ForbiddenAccessException), HttpStatusCode.BadRequest);
         }
 
         public static async Task<FulcrumException> ToFulcrumExceptionAsync(HttpResponseMessage response)
