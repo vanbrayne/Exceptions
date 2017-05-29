@@ -53,7 +53,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             AddFulcrumException(typeof(ContractException));
             AddFulcrumException(typeof(NotFoundException), HttpStatusCode.BadRequest);
             AddFulcrumException(typeof(NotImplementedException), HttpStatusCode.InternalServerError);
-            AddFulcrumException(typeof(TryAgainException), HttpStatusCode.ServiceUnavailable);
+            AddFulcrumException(typeof(TryAgainException), HttpStatusCode.InternalServerError);
 
             // WebApi
             AddFulcrumException(typeof(ServerContractException), HttpStatusCode.BadRequest);

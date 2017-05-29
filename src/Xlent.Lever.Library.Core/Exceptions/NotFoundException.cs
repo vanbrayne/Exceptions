@@ -33,7 +33,13 @@ namespace Xlent.Lever.Library.Core.Exceptions
         private void SetProperties()
         {
             if (RecommendedWaitTimeInSeconds <= 0.0) RecommendedWaitTimeInSeconds = 60;
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            if (FriendlyMessage == null)
+            {
+                FriendlyMessage =
+                    "The resource with the given identification could not be found. Check that your information is correct or try again after a minute or so.";
+            }
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#NotFoundException";
         }
     }
 }

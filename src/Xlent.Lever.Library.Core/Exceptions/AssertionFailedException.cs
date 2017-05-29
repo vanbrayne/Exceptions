@@ -34,7 +34,8 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
 
             FriendlyMessage =
-                    "An assertion made by the programmer proved to be wrong and the request couldn't be properly fulfilled. Please report the following:";
+                "An assertion made by the programmer proved to be wrong and the request couldn't be properly fulfilled.";
+            FriendlyMessage += "Please report the following:";
             FriendlyMessage += $"\rCorrelactionId: {CorrelationId}";
             FriendlyMessage += $"\rInstanceId: {InstanceId}";
 

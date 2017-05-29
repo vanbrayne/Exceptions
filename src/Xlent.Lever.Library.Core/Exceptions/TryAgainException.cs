@@ -29,7 +29,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
             if (RecommendedWaitTimeInSeconds <= 0.0) RecommendedWaitTimeInSeconds = 2;
 
             FriendlyMessage =
-                "The request conflicted with a business rules. Please make changes accordingly and try again.";
+                "The resource was temporarily locked, please try again.";
 
             MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#TryAgainException";
         }

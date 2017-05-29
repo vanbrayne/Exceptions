@@ -26,7 +26,10 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 
         private void SetProperties()
         {
-            // TODO: Set the following properties if they haven't been set already: TechnicalMessage, FriendlyMessage, MoreInfoUrl, FriendlyMessageId
+            FriendlyMessage =
+                "The system could identify you, but you did not have right to access the resource.";
+
+            MoreInfoUrl = "http://lever.xlent-fulcrum.info/FulcrumExceptions#ForbiddenAccessException";
         }
     }
 }
