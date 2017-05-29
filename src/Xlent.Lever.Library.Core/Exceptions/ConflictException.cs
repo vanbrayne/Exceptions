@@ -18,7 +18,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
             return new ConflictException(message, innerException);
         }
-        public const string ExceptionType = "8ca23bea-e1f9-4c35-a181-e16738122a75";
+        public const string ExceptionType = "Xlent.Fulcrum.Conflict";
         public ConflictException() : this((string)null, null) { }
         public ConflictException(string message) : this(message, null)
         {

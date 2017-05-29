@@ -13,7 +13,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
         {
             return new ServerContractException(message, innerException);
         }
-        public const string ExceptionType = "ff6ebb39-23eb-42c3-997d-17a45bd75cf3";
+        public const string ExceptionType = "Xlent.Fulcrum.ServerContract";
         public ServerContractException() : this((string)null, null) { }
         public ServerContractException(string message) : this(message, null) { }
         public ServerContractException(string message, Exception innerException) : base(message, innerException)

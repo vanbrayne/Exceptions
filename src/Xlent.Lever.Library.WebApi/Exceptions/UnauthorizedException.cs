@@ -13,7 +13,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
         {
             return new UnauthorizedException(message, innerException);
         }
-        public const string ExceptionType = "8f4c4dde-7faf-43e8-9f7b-36ff9a24e56d";
+        public const string ExceptionType = "Xlent.Fulcrum.Unauthorized";
         public UnauthorizedException() : this((string)null, null) { }
         public UnauthorizedException(string message) : this(message, null) { }
         public UnauthorizedException(string message, Exception innerException) : base(message, innerException)

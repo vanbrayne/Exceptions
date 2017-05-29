@@ -12,7 +12,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
             return new TryAgainException(message, innerException);
         }
-        public const string ExceptionType = "5350b10d-0ac5-4802-aa9b-a9016c7bf636";
+        public const string ExceptionType = "Xlent.Fulcrum.TryAgain";
         public TimeSpan RetryAfterTimeSpan { get; set; }
         public TryAgainException() : this((string)null, null) { }
         public TryAgainException(string message) : this(message, null) { }

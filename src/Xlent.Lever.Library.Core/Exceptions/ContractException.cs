@@ -12,7 +12,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
             return new ContractException(message, innerException);
         }
-        public const string ExceptionType = "e83dd5f2-e489-49bf-8991-799c953db2f6";
+        public const string ExceptionType = "Xlent.Fulcrum.Contract";
         public ContractException() : this((string)null, null) { }
         public ContractException(string message) : this(message, null) { }
         public ContractException(string message, Exception innerException) : base(message, innerException)
