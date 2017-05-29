@@ -19,7 +19,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
             return new AssertionFailedException(message, innerException);
         }
 
-        public const string ExceptionTypeId = "f736f9dd-db95-427e-a231-48e9361af921";
+        public const string ExceptionType = "f736f9dd-db95-427e-a231-48e9361af921";
         public AssertionFailedException() : this((string)null, null) { }
         public AssertionFailedException(string message) : this(message, null) { }
         public AssertionFailedException(string message, Exception innerException) : base(message, innerException)
@@ -28,7 +28,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         }
 
         public override bool IsRetryMeaningful => false;
-        public override string TypeId => ExceptionTypeId;
+        public override string Type => ExceptionType;
 
         private void SetProperties()
         {

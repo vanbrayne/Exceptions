@@ -74,13 +74,13 @@ namespace Xlent.Lever.Library.Core.Exceptions
         /// An optional error code for this specific part of the code that reported the error. Will typically
         /// be a part of the <see cref="MoreInfoUrl"/>.
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; set; } /// <summary>
 
-        /// <summary>
         /// Errors are grouped into different types, such as "BusinessRule", "NotFound", "Unavailable".
-        /// TypeId is a mandatory unique id for the type of error. The recommendation is to use a constant GUID.
+        /// Type is a mandatory unique id for the type of error. The recommendation is to use a readable string
+        /// such as "Xlent.Fulcrum.AssertionFailed"
         /// </summary>
-        public virtual string TypeId { get; private set; }
+        public virtual string Type { get; private set; }
 
         /// <summary>
         /// All calls that were involved in the chain that led to this error (successful calls or not) will
@@ -119,7 +119,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
             ServerTechnicalName = fulcrumError.ServerTechnicalName;
             InstanceId = fulcrumError.InstanceId;
             Code = fulcrumError.Code;
-            TypeId = fulcrumError.TypeId;
+            Type = fulcrumError.Type;
             CorrelationId = fulcrumError.CorrelationId;
         }
 

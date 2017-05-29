@@ -15,7 +15,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
             return new NotImplementedException(message, innerException);
         }
-        public const string ExceptionTypeId = "573f806f-56b9-48a0-86d9-15d3bf6c9c6c";
+        public const string ExceptionType = "573f806f-56b9-48a0-86d9-15d3bf6c9c6c";
         public NotImplementedException() : this((string)null, null) { }
         public NotImplementedException(string message) : this(message, null) { }
         public NotImplementedException(string message, Exception innerException) : base(message, innerException)
@@ -24,7 +24,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         }
 
         public override bool IsRetryMeaningful => false;
-        public override string TypeId => ExceptionTypeId;
+        public override string Type => ExceptionType;
 
         private void SetProperties()
         {

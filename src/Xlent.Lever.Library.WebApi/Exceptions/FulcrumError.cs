@@ -74,9 +74,9 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
 
         /// <summary>
         /// Errors are grouped into different types, such as "BusinessRule", "NotFound", "Unavailable".
-        /// TypeId is a mandatory unique id for the type of error. The recommendation is to use a constant GUID.
+        /// Type is a mandatory unique id for the type of error. The recommendation is to use a constant GUID.
         /// </summary>
-        public string TypeId { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// All calls that were involved in the chain that led to this error (successful calls or not) will
@@ -106,7 +106,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
             ServerTechnicalName = fulcrumError.ServerTechnicalName;
             InstanceId = fulcrumError.InstanceId;
             Code = fulcrumError.Code;
-            TypeId = fulcrumError.TypeId;
+            Type = fulcrumError.Type;
             CorrelationId = fulcrumError.CorrelationId;
         }
 

@@ -12,7 +12,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
             return new BusinessRuleException(message, innerException);
         }
-        public const string ExceptionTypeId = "f4ebb36f-1c1c-4f9e-bc4d-9b1d3e000823";
+        public const string ExceptionType = "f4ebb36f-1c1c-4f9e-bc4d-9b1d3e000823";
         public BusinessRuleException() : this((string)null, null) { }
         public BusinessRuleException(string message) : this(message, null) { }
 
@@ -22,7 +22,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         }
 
         public override bool IsRetryMeaningful => false;
-        public override string TypeId => ExceptionTypeId;
+        public override string Type => ExceptionType;
 
         private void SetProperties()
         {

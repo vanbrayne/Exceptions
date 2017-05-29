@@ -133,12 +133,12 @@ namespace Service.WebApi.Test
             where T : FulcrumException, new()
         {
             var expectedException = new T();
-            Assert.AreEqual(expectedException.TypeId, fulcrumError.TypeId,
-                $"Expected error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId}. Error had type {fulcrumError.GetType().FullName} ({fulcrumError.TypeId}). Message was {fulcrumError.TechnicalMessage}.");
+            Assert.AreEqual(expectedException.Type, fulcrumError.Type,
+                $"Expected error with Fulcrum exception type {typeof(T).Name} ({expectedException.Type}. Error had type {fulcrumError.GetType().FullName} ({fulcrumError.Type}). Message was {fulcrumError.TechnicalMessage}.");
             Assert.AreEqual(expectedException.IsRetryMeaningful, fulcrumError.IsRetryMeaningful,
-                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had IsRetryMeaningful set to {fulcrumError.IsRetryMeaningful}.");
+                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.Type} unexpectedly had IsRetryMeaningful set to {fulcrumError.IsRetryMeaningful}.");
             Assert.AreEqual(expectedException.RecommendedWaitTimeInSeconds, fulcrumError.RecommendedWaitTimeInSeconds,
-                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.TypeId} unexpectedly had RecommendedWaitTimeInSeconds set to {fulcrumError.RecommendedWaitTimeInSeconds}.");
+                $"Error with Fulcrum exception type {typeof(T).Name} ({expectedException.Type} unexpectedly had RecommendedWaitTimeInSeconds set to {fulcrumError.RecommendedWaitTimeInSeconds}.");
             Assert.IsFalse(string.IsNullOrWhiteSpace(fulcrumError.InstanceId));
         }
 

@@ -13,7 +13,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
         {
             return new ForbiddenAccessException(message, innerException);
         }
-        public const string ExceptionTypeId = "47792923-5412-4574-949a-bf2201c94748";
+        public const string ExceptionType = "47792923-5412-4574-949a-bf2201c94748";
         public ForbiddenAccessException() : this((string)null, null) { }
         public ForbiddenAccessException(string message) : this(message, null) { }
         public ForbiddenAccessException(string message, Exception innerException) : base(message, innerException)
@@ -22,7 +22,7 @@ namespace Xlent.Lever.Library.WebApi.Exceptions
         }
 
         public override bool IsRetryMeaningful => false;
-        public override string TypeId => ExceptionTypeId;
+        public override string Type => ExceptionType;
 
         private void SetProperties()
         {

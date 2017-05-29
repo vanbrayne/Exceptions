@@ -61,9 +61,10 @@
 
         /// <summary>
         /// Errors are grouped into different types, such as "BusinessRule", "NotFound", "Unavailable".
-        /// TypeId is a mandatory unique id for the type of error. The recommendation is to use a constant GUID.
+        /// Type is a mandatory unique id for the type of error. The recommendation is to use a readable string
+        /// such as "Xlent.Fulcrum.AssertionFailed"
         /// </summary>
-        string TypeId { get; }
+        string Type { get; }
 
         /// <summary>
         /// All calls that were involved in the chain that led to this error (successful calls or not) will

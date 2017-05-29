@@ -12,7 +12,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         {
             return new ContractException(message, innerException);
         }
-        public const string ExceptionTypeId = "e83dd5f2-e489-49bf-8991-799c953db2f6";
+        public const string ExceptionType = "e83dd5f2-e489-49bf-8991-799c953db2f6";
         public ContractException() : this((string)null, null) { }
         public ContractException(string message) : this(message, null) { }
         public ContractException(string message, Exception innerException) : base(message, innerException)
@@ -21,7 +21,7 @@ namespace Xlent.Lever.Library.Core.Exceptions
         }
 
         public override bool IsRetryMeaningful => false;
-        public override string TypeId => ExceptionTypeId;
+        public override string Type => ExceptionType;
 
         private void SetProperties()
         {
