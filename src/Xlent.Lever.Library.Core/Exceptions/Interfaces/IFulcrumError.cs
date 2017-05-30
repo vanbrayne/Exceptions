@@ -21,6 +21,13 @@
         string FriendlyMessage { get; }
 
         /// <summary>
+        /// Errors are grouped into different types, such as "BusinessRule", "NotFound", "Unavailable".
+        /// Type is a mandatory unique id for the type of error. The recommendation is to use a readable string
+        /// such as "Xlent.Fulcrum.AssertionFailed"
+        /// </summary>
+        string Type { get; }
+
+        /// <summary>
         /// An optional URL that anyone seeing the error message can click (or copy and paste) in a browser.
         /// The target web page should describe the error condition fully, as well as potential solutions
         /// to help them resolve the error condition.
@@ -58,13 +65,6 @@
         /// be a part of the <see cref="MoreInfoUrl"/>.
         /// </summary>
         string Code { get; }
-
-        /// <summary>
-        /// Errors are grouped into different types, such as "BusinessRule", "NotFound", "Unavailable".
-        /// Type is a mandatory unique id for the type of error. The recommendation is to use a readable string
-        /// such as "Xlent.Fulcrum.AssertionFailed"
-        /// </summary>
-        string Type { get; }
 
         /// <summary>
         /// All calls that were involved in the chain that led to this error (successful calls or not) will
